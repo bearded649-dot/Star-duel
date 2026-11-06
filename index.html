@@ -1298,15 +1298,16 @@ class MultiplayerManager{
   for(let k=0;k<3&&!ws;k++){try{ws=await this.pjOpen(id,on)}catch(e){if(e.message==='ID-TAKEN'&&k<2){await this.sleep(1500);if(this.qid!==my)return;continue}if(e.message==='ID-TAKEN')throw this.fatal('Ese código de sala ya está en uso: pulsa 🎲 para generar otro');throw e}}
   if(this.qid!==my){try{ws.close()}catch(e){}return}this.pj=ws;
   st('Sala «'+room.toUpperCase()+'» creada. Dile el código (o pásale el enlace 🔗) a tu compañero. Esperando… (hasta 10 min)');
-  const end=Date.now()+600000;while(this.qid===my&&!this.open&&Date.now()<end){await this.sleep(500);if(ws.readyState>1)throw this.fatal('Se perdió la conexión con el servicio de salas. Vuelve a crear la sala')}
-  try{ws.close()}catch(e){}if(this.qid===my&&!this.open)throw this.fatal('Nadie se unió a la sala en 10 minutos. Vuelve a crearla')}
+  const end=Date.now()+60000;while(this.qid===my&&!this.open&&Date.now()<end){await this.sleep(300);if(ws.readyState>1)throw Error('Se perdió el servicio principal de salas')}
+  try{ws.close()}catch(e){}if(this.qid===my&&!this.open)throw Error('Tiempo agotado en el servicio principal; cambiando al servicio alternativo…')}
  async quickJoinA(room,st){this.close();const my=this.qid,hid=this.pjId(room);let ans=null,gone=false;
   const ws=await this.pjOpen('stardualg'+Math.random().toString(36).slice(2,10),m=>{if(m.src!==hid)return;if(m.type==='ANSWER')ans=m.payload;else if(m.type==='EXPIRE')gone=true});this.pj=ws;
   this.isHost=false;this.room=this.hash(room);this.mk();await this.pc.setLocalDescription(await this.pc.createOffer());await this.gather();if(this.qid!==my){return 'cancel'}
   ws.send(JSON.stringify({type:'OFFER',dst:hid,payload:{d:this.pc.localDescription,r:this.room}}));st('Sala encontrada en el servicio. Esperando al anfitrión…');
-  const end=Date.now()+12000;while(!ans&&!gone&&this.qid===my&&Date.now()<end)await this.sleep(200);
+  const end=Date.now()+60000;while(!ans&&!gone&&this.qid===my&&Date.now()<end)await this.sleep(200);
   if(this.qid!==my)return 'cancel';if(!ans){try{ws.close()}catch(e){}return null}
-  if(ans.r!==this.room)throw this.fatal('El código de sala no coincide');this.mode=ans.m;await this.pc.setRemoteDescription(ans.d);st('Conectando con el anfitrión…');try{ws.close()}catch(e){}await this.waitOpen(my,25000);return this.qid===my?true:'cancel'}
+  if(ans.r!==this.room)throw this.fatal('El código de sala no coincide');this.mode=ans.m;await this.pc.setRemoteDescription(ans.d);st('Conectando con el anfitrión…');try{ws.close()}catch(e){}
+  try{await this.waitOpen(my,25000);return this.qid===my?true:'cancel'}catch(e){while(this.qid===my&&Date.now()<end)await this.sleep(250);return null}}
  // --- transporte B
  async pub(tp,txt,st){if(txt.length>3900)throw this.fatal('Los datos de conexión son demasiado grandes para la conexión rápida: usa la conexión manual');
   for(let i=0;i<4;i++){let r;try{r=await fetch('https://ntfy.sh/'+tp,{method:'POST',body:txt})}catch(e){throw this.fatal('No se pudo contactar con el servicio de salas (¿sin internet o bloqueado?). Usa la conexión manual')}
@@ -1327,7 +1328,7 @@ class MultiplayerManager{
   if(this.qid!==my)return;if(!got)throw this.fatal('Nadie se unió a la sala en 5 minutos. Vuelve a crearla');st('Compañero encontrado. Conectando…');await this.pc.setRemoteDescription(got.d);return this.waitOpen(my,25000)}
  async quickJoinB(room,st){this.close();const my=this.qid,tp=this.topic(room);st('Buscando la sala «'+room.toUpperCase()+'» (servicio alternativo)…');let offer=null,bt=0;
   // los mensajes guardados llegan de más antiguo a más reciente: tras el primero se espera un instante para quedarse con el último
-  await this.listen(tp+'-o','10m',async m=>{try{const o=await this.unpack(m.message);if(o&&o.d&&o.r===this.hash(room)){if(!offer||m.time>=offer.t){offer=Object.assign(o,{t:m.time})}if(!bt)bt=setTimeout(()=>{if(this.ac)this.ac.abort()},1200)}}catch(e){}return false},Date.now()+45000,my,()=>!!offer&&bt);
+  await this.listen(tp+'-o','10m',async m=>{try{const o=await this.unpack(m.message);if(o&&o.d&&o.r===this.hash(room)){if(!offer||m.time>=offer.t){offer=Object.assign(o,{t:m.time})}if(!bt)bt=setTimeout(()=>{if(this.ac)this.ac.abort()},1200)}}catch(e){}return false},Date.now()+180000,my,()=>!!offer&&bt);
   clearTimeout(bt);if(this.qid!==my)return;if(!offer)throw this.fatal('No se encontró la sala «'+room.toUpperCase()+'». Comprueba el código y que el anfitrión haya pulsado «Crear sala» hace poco');
   const ans=await this.guestFrom(offer,room),my2=this.qid;await this.pub(tp+'-a',await this.pack(JSON.parse(atob(ans))),st);st('Sala encontrada. Conectando con el anfitrión…');return this.waitOpen(my2,30000)}
  // --- dispatchers
@@ -1336,7 +1337,7 @@ class MultiplayerManager{
   return this.quickHostB(room,mode,st)}
  async quickJoin(room,st){room=room.trim();if(!room)throw Error('Escribe el código de sala de tu compañero');st('Buscando la sala «'+room.toUpperCase()+'»…');let r=null;
   try{r=await this.quickJoinA(room,st)}catch(e){if(e.fatal)throw e}
-  if(r)return;st('No hay sala en el servicio principal; probando el alternativo…');return this.quickJoinB(room,st)}
+  if(r)return;st('El servicio principal no completó la conexión; cambiando al alternativo…');return this.quickJoinB(room,st)}
  send(ch,o){const c=ch==='st'?this.st:this.ev;if(this.open&&c&&c.readyState==='open')c.send(JSON.stringify(o))}
  close(){this.qid++;if(this.pj){try{this.pj.close()}catch(e){}this.pj=null}if(this.ac){try{this.ac.abort()}catch(e){}this.ac=null}this.open=false;if(this.pc){try{this.pc.close()}catch(e){}this.pc=null}}
  tick(dt){this.t+=dt;if(this.t<.05)return;this.t=0;const p=this.G.p,r=p.root,q=r.quaternion;
