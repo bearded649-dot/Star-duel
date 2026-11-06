@@ -41,6 +41,30 @@ textarea{width:100%;height:56px;font-size:10px;background:#000;color:#8fd;border
 #invui .it{display:grid;grid-template-columns:auto 1fr auto;gap:1.4vmin;align-items:center;padding:1vmin;border:1px solid #4cf3;margin:.7vmin 0;background:#0a1e33}#invui .it i{font-style:normal;font-size:4vmin}
 #invui .it small{display:block;color:#8ab;font-size:.85em}#invui button:disabled{opacity:.45;cursor:not-allowed}#invui .ft{display:flex;justify-content:space-between;align-items:center;margin-top:1vmin;color:#8ab;font-size:.85em}
 #invui .it.sel{border-color:#fc3;background:#13304d}
+
+/* ===== Menú principal ===== */
+#menu{background:radial-gradient(ellipse at 25% 15%,#0c2c4ccc,#02060aea 75%)}
+.mw{width:min(96vw,1020px);margin:auto;display:grid;grid-template-columns:minmax(250px,340px) 1fr;gap:2.2vmin;align-items:start}
+.mh{grid-column:1/-1;text-align:center}.mh h1{margin:0;text-shadow:0 0 22px #4cf9}.mh .sub{margin:.3em 0 0;opacity:.8;font-size:clamp(11px,1.6vmin,14px);letter-spacing:.08em}#res{margin:.4em 0 0;text-align:center}#res:empty{display:none}
+.side{display:flex;flex-direction:column;gap:1vmin}
+.mode{display:grid;grid-template-columns:auto 1fr;column-gap:1.6vmin;align-items:center;text-align:left;width:100%;margin:0;padding:1.3vmin 1.6vmin;background:linear-gradient(90deg,#0a2a44,#071a2c);border:1px solid #4cf5;border-left:3px solid #4cf;transition:transform .12s,border-color .12s}
+.mode i{grid-row:1/3;font-style:normal;font-size:max(26px,3.8vmin)}.mode b{letter-spacing:.12em;font-size:clamp(12px,1.9vmin,16px)}.mode small{opacity:.7;font-size:clamp(10px,1.4vmin,12px)}
+.mode:hover{border-left-color:#fd3;transform:translateX(3px);background:linear-gradient(90deg,#14507f,#0a2a44)}.mode.main{border-left-color:#5f5;background:linear-gradient(90deg,#0d3a30,#071a2c)}.mode.main:hover{background:linear-gradient(90deg,#14644c,#0a2a44)}
+.sens{padding:1.2vmin 1.6vmin;border:1px solid #4cf3;background:#06101ccc;font-size:clamp(10px,1.5vmin,13px)}.sens input{width:100%;margin-top:.4em}
+.pan{background:#06101cee;border:1px solid #4cf5;padding:2vmin;min-width:0;text-align:left;box-shadow:0 0 30px #4cf1}
+.mtabs{display:flex;gap:.5vmin;margin-bottom:1.4vmin;border-bottom:1px solid #4cf4}.mtabs button{margin:0;border:0;border-bottom:2px solid transparent;border-radius:0;background:none;padding:.7em 1.1em}.mtabs button.on{border-bottom-color:#fd3;color:#fd3;background:#0a2a4466}
+.pan h3{margin:0 0 .3em;font-size:clamp(12px,1.8vmin,15px);letter-spacing:.1em;color:#4cf}.pan p{margin:.3em 0}.fl{display:block;font-size:clamp(10px,1.4vmin,12px);letter-spacing:.14em;opacity:.7;margin:.2em 0}
+.steps{display:flex;gap:1vmin;flex-wrap:wrap;margin:0 0 1.2vmin;padding:0;list-style:none;counter-reset:s}.steps li{counter-increment:s;font-size:clamp(10px,1.4vmin,12px);padding:.3em .7em;border:1px solid #4cf4;background:#0a2a4455}.steps li:before{content:counter(s)'  ';color:#fd3;font-weight:bold}
+.rrow{display:flex;gap:.4em;align-items:center}.rrow input{flex:1;min-width:0;margin:.3em 0;padding:.65em;background:#000;color:#8fd;border:1px solid #4cf6;text-transform:uppercase;letter-spacing:.14em;font:inherit;font-size:clamp(13px,2vmin,17px)}.rrow button{margin:0;padding:.65em .9em}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:1.2vmin;margin:1vmin 0}.box{border:1px solid #4cf4;padding:1.2vmin;background:#0a1e3388}.box button{width:100%;margin:.4em 0 0}.box select{width:100%;margin:.3em 0;padding:.4em;background:#000;color:#bfe9ff;border:1px solid #4cf6;font:inherit}
+.pri{border-color:#5f5;background:#0d3a30}.pri:hover{background:#14644c}.pri:disabled{opacity:.45;cursor:not-allowed}
+#ns:not(:empty){padding:.7em 1em;border:1px solid #fd35;border-left:3px solid #fd3;background:#1a1a0888;opacity:1;margin:.8vmin 0}#ns:empty{display:none}
+.pan details{border-top:1px solid #4cf3;margin-top:1vmin}.pan summary{margin:.6em 0;color:#9cd}
+.pan kbd{display:inline-block;min-width:1.7em;padding:.05em .45em;margin:0 .1em;text-align:center;border:1px solid #4cf8;border-bottom-width:2px;border-radius:3px;background:#0a2a44;font:inherit;font-size:.92em;color:#fd3}
+.gl{margin:.2em 0 .6em;padding-left:1.1em;font-size:clamp(11px,1.55vmin,13px);line-height:1.65}.gl li{margin:.15em 0}
+.mf{grid-column:1/-1;text-align:center;font-size:clamp(9px,1.3vmin,11px);opacity:.55}
+@media(max-width:780px){.mw{grid-template-columns:1fr}.duo{grid-template-columns:1fr}}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid #fd3;outline-offset:2px}
 </style></head><body>
 <div id="hud">
  <div id="top"><span id="sc"></span><span id="wv"></span><span id="en"></span><span id="mny" style="color:#fc3"></span></div>
@@ -51,84 +75,54 @@ textarea{width:100%;height:56px;font-size:10px;background:#000;color:#8fd;border
 <div id="flash"></div><div id="dth"></div><div id="fx"></div>
 <div id="lock" class="ov" style="display:none"><div class="card">Clic para tomar el control<br><small>(ESC libera el ratón)</small></div></div>
 <div id="lobby" class="ov" style="display:none;z-index:7"><div class="card"><h1>SALA LISTA</h1><p id="lbt"></p><button id="lbGo">▶ INICIAR PARTIDA</button><button id="lbX">✖ Desconectar</button></div></div><div id="pause" class="ov" style="display:none;z-index:8"><div class="card"><h1>PAUSA</h1><button id="pRes">▶ Continuar</button><button id="pOpt">⚙ Opciones</button><button id="pMenu">⌂ Menú principal</button></div></div><div id="opt" class="ov" style="display:none;z-index:9"><div class="card" id="optc"></div></div>
-<div id="menu" class="ov">
- <div class="card menu-card">
-  <div class="menu-topline"><span><i></i> SISTEMA ACTIVO</span><span>SECTOR 07 <b>·</b> BUILD 1.0</span></div>
-  <header class="menu-hero">
-   <div class="hero-kicker">EL ESPACIO NO PERDONA</div>
-   <h1>STAR <em>DUEL</em></h1>
-   <p>Prepara tu nave. Encuentra aliados. Domina la galaxia.</p>
-   <p id="res" class="menu-res"></p>
-  </header>
-  <div class="mode-heading"><span>01 / SELECCIONA TU MISIÓN</span><small>TRES FORMAS DE JUGAR</small></div>
-  <div class="mode-grid">
-   <button id="bSolo" class="mode-card solo"><span class="mode-no">01</span><span class="mode-icon">✦</span><strong>CAMPAÑA</strong><small>Sobrevive a oleadas cada vez más peligrosas.</small><b>JUGAR SOLO <i>↗</i></b></button>
-   <button id="bCoop" class="mode-card coop"><span class="mode-no">02</span><span class="mode-icon">◉</span><strong>EXPEDICIÓN CO-OP</strong><small>Explora planetas y lucha codo con codo.</small><b>FORMAR EQUIPO <i>↗</i></b></button>
-   <button id="bDuel" class="mode-card duel"><span class="mode-no">03</span><span class="mode-icon">⚔</span><strong>DUELO PvP</strong><small>Enfréntate a otro piloto. Primero a 5 bajas.</small><b>ENTRAR EN ARENA <i>↗</i></b></button>
-  </div>
-  <div class="menu-bottom-grid">
-   <section class="menu-panel online-panel">
-    <div class="panel-title"><div><span class="section-tag">02 / MULTIJUGADOR</span><h2>Conecta tu escuadrón</h2></div><span class="panel-art">⌁</span></div>
-    <p>Crea una sala para invitar a alguien o introduce el código que te han compartido.</p>
-    <div class="room-row"><input id="room" placeholder="CÓDIGO DE SALA" autocomplete="off"><button id="qDice" title="Generar código">🎲</button><button id="qCopy" title="Copiar código">▣</button><button id="qLink" title="Copiar enlace">↗</button></div>
-    <label class="mode-label" for="mmode">MODO DE LA SALA</label>
-    <select id="mmode"><option value="coop" selected>CO-OP · Aventura compartida</option><option value="pvp">PvP · Duelo 1 contra 1</option></select>
-    <div class="room-actions"><button id="qHost" class="primary-action">＋ CREAR SALA</button><button id="qJoin" class="secondary-action">↗ UNIRSE</button></div>
-    <button id="qCancel" class="cancel-action" style="display:none">✕ CANCELAR CONEXIÓN</button>
-    <button id="qStart" class="primary-action" style="display:none;width:100%;margin-top:10px">▶ INICIAR PARTIDA</button>
-    <p id="ns" class="network-status"></p>
-    <details class="manual-details"><summary>Problemas para conectar · conexión manual</summary>
-     <div class="cols">
-      <div><b>ANFITRIÓN</b><button id="bHost">1. Crear código</button><textarea id="oc" readonly placeholder="Tu código: envíaselo al rival"></textarea><button class="cp" data-t="oc">▣ Copiar código</button><textarea id="ia" placeholder="2. Pega aquí la respuesta del rival (se conecta solo al pegar)"></textarea><button id="bConn">3. Conectar</button></div>
-      <div><b>INVITADO</b><textarea id="ic" placeholder="1. Pega el código del anfitrión (genera la respuesta solo al pegar)"></textarea><button id="bJoin">2. Generar respuesta</button><textarea id="oa" readonly placeholder="Envía esta respuesta al anfitrión"></textarea><button class="cp" data-t="oa">▣ Copiar respuesta</button></div>
-     </div>
-    </details>
-   </section>
-   <section class="menu-panel settings-panel">
-    <div class="panel-title"><div><span class="section-tag">03 / CONFIGURACIÓN</span><h2>Ajusta tu vuelo</h2></div><span class="panel-art">⚙</span></div>
-    <div class="setting-row"><label for="sens">Sensibilidad de cámara</label><output id="sensVal">1.0×</output></div>
-    <input id="sens" type="range" min="0.3" max="2.5" step="0.1" value="1">
-    <div class="setting-hint">Ajusta la velocidad de giro a tu estilo de pilotaje.</div>
-    <button id="bOpt" class="options-action">⚙ OPCIONES AVANZADAS <span>↗</span></button>
-    <div class="quick-tip"><span>✧ CONSEJO DE PILOTO</span><p>Domina el impulso y vigila el calor de tus armas. Una buena maniobra puede decidir el combate.</p></div>
-   </section>
-  </div>
-  <details class="help-details"><summary>GUÍA DE PILOTAJE Y MECÁNICAS <span>＋</span></summary>
-   <div class="help-content">
-    <p class="help"><b>COOP</b> · Viaja a un planeta y pulsa <b>ENTER</b> para aterrizar: tras la entrada en la atmósfera <b>aparcas la nave tú mismo</b>: pilótala hasta el círculo verde (sigue la columna de luz), frena a ≤14 m/s, nívela y desciende con [C] (el panel te guía; el compañero puede acompañarte con ENTER). Tras las 3 oleadas aparecen jefes aleatorios cada 60-180 s y los enemigos normales llegan con calma. En superficie: WASD, Espacio salto, clic dispara, Shift correr. Láser y boost gastan energía: el láser se recupera un poco con los orbes verdes; ambos se recargan en los círculos de los planetas o sifoneando naves enemigas en el espacio (mantén F cerca). ENTER junto a tu nave: despegar. Minimapa arriba a la derecha: <b>M</b> cambia el zoom; el terreno explorado se recuerda.</p>
-    <p class="help"><b>MOTOS Y GASOLINA</b> · Cada planeta tiene una moto aparcada junto al camino de la aldea, con poca gasolina. <b>Q</b> montar/bajar · W acelerar · S frenar/marcha atrás · A/D girar · ESPACIO freno de mano. En las <b>gasolineras</b> coloca la moto dentro del círculo naranja para repostar gratis; <b>B</b> compra un bidón ($45) y <b>J</b> lo usa para repostar la moto cercana.</p>
-    <p class="help"><b>CONTROLES</b> · Ratón: cámara y mira · W/S: avance/freno · A/D: lateral · R/C: subir/bajar · Clic o G: disparar · F: sifonear combustible cerca de una nave enemiga (COOP) · ESPACIO: pirueta evasiva · Shift: turbo · X: asistencia de inercia · V: cabina/3ª persona · T: ayuda de puntería · P: pausa · M: zoom del minimapa.</p>
+<div id="menu" class="ov"><div class="mw">
+ <header class="mh"><h1>STAR DUEL</h1><p class="sub">COMBATE ESPACIAL 3D · INERCIA NEWTONIANA · COOP P2P</p><p id="res"></p></header>
+ <nav class="side">
+  <button id="bCoop" class="mode main"><i>🪐</i><b>AVENTURA / COOP</b><small>Explora planetas, solo o con compañero</small></button>
+  <button id="bSolo" class="mode"><i>🚀</i><b>SOLITARIO</b><small>Oleadas de naves enemigas</small></button>
+  <button id="bDuel" class="mode"><i>⚔</i><b>DUELO vs PILOTO</b><small>Primero a 5 bajas</small></button>
+  <button id="bOpt" class="mode"><i>⚙</i><b>OPCIONES</b><small>Gráficos, sonido y controles</small></button>
+  <div class="sens">Sensibilidad de cámara<input id="sens" type="range" min="0.3" max="2.5" step="0.1" value="1"></div>
+ </nav>
+ <main class="pan">
+  <div class="mtabs"><button class="on" data-tab="mp">🌐 Multijugador</button><button data-tab="gd">📖 Guía de juego</button></div>
+  <section id="tab-mp">
+   <ol class="steps"><li>Elige el modo</li><li>Crea la sala o únete</li><li>El anfitrión inicia la partida</li></ol>
+   <span class="fl">CÓDIGO DE SALA</span>
+   <div class="rrow"><input id="room" placeholder="Pulsa 🎲 para generar uno" autocomplete="off"><button id="qDice" title="Generar código">🎲</button><button id="qCopy" title="Copiar código">📋</button><button id="qLink" title="Copiar enlace de invitación">🔗</button></div>
+   <div class="duo">
+    <div class="box"><h3>🏠 ANFITRIÓN</h3><p class="note">Crea la sala y pasa el código (o el enlace 🔗) a tu compañero.</p><span class="fl">MODO</span><select id="mmode"><option value="coop" selected>COOP (aventura)</option><option value="pvp">PvP 1 vs 1</option></select><button id="qHost" class="pri">CREAR SALA</button></div>
+    <div class="box"><h3>🚪 INVITADO</h3><p class="note">Escribe el código de arriba (o abre el enlace de invitación) y pulsa Unirse.</p><button id="qJoin" class="pri">UNIRSE A LA SALA</button></div>
    </div>
-  </details>
-  <footer class="menu-footer"><span>STAR DUEL <b>///</b> EXPLORACIÓN Y COMBATE ESPACIAL</span><span>BUEN VUELO, PILOTO.</span></footer>
- </div>
-</div>
-<style>
-#menu{background:radial-gradient(ellipse at 50% 0%,#12304b99 0%,#050b17ed 48%,#02050bf5 100%);backdrop-filter:blur(9px);padding:22px 14px}
-#menu .menu-card{width:min(1120px,96vw);max-width:1120px;max-height:96vh;overflow:auto;text-align:left;padding:clamp(18px,3vw,34px);border:1px solid #54cfff55;border-radius:16px;background:linear-gradient(145deg,#0b1b2cf5,#050c18f7 65%,#071526f5);box-shadow:0 24px 90px #000c,0 0 55px #148dcc18,inset 0 1px #ffffff12;color:#c7e9ff}
-#menu .menu-card::-webkit-scrollbar{width:7px}#menu .menu-card::-webkit-scrollbar-thumb{background:#286080;border-radius:9px}
-.menu-topline,.menu-footer{display:flex;justify-content:space-between;gap:12px;color:#719bb4;font-size:10px;letter-spacing:.16em}.menu-topline i,.live-dot{display:inline-block;width:7px;height:7px;background:#59f2c1;border-radius:50%;box-shadow:0 0 12px #59f2c1;margin-right:7px}
-.menu-hero{text-align:center;padding:clamp(22px,4vw,45px) 10px 24px}.hero-kicker,.section-tag,.mode-heading{font-size:10px;letter-spacing:.2em;color:#65cfff;font-weight:bold}
-#menu .menu-hero h1{font-size:clamp(42px,8vw,76px);letter-spacing:.16em;margin:9px 0 2px;color:#e8f8ff;text-shadow:0 0 28px #38bfff55}
-#menu .menu-hero h1 em{font-style:normal;color:#55d7ff}
-.menu-hero>p:not(.menu-res){margin:8px 0;color:#91afc4;font-size:clamp(12px,1.5vw,15px);letter-spacing:.04em}
-#menu .menu-res{min-height:16px;color:#ffd66b;font-size:12px;margin:9px 0 0}
-.mode-heading{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #55bce52b;padding:0 2px 10px}.mode-heading small{color:#607e95;font-size:9px;letter-spacing:.13em}
-.mode-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:14px 0 22px}
-#menu .mode-card{position:relative;display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:8px;min-height:190px;padding:18px;border-radius:10px;background:linear-gradient(145deg,#102940,#091727);border:1px solid #36789a66;margin:0;transition:transform .2s,border-color .2s,box-shadow .2s}
-#menu .mode-card:hover{transform:translateY(-4px);background:linear-gradient(145deg,#153b58,#0a1b2c);border-color:#70dfff;box-shadow:0 12px 30px #0007,0 0 22px #3bcaff20}
-.mode-no{position:absolute;right:14px;top:13px;color:#52758d;font-size:10px;letter-spacing:.12em}.mode-icon{font-size:25px;color:#68dcff;text-shadow:0 0 15px #3bcaff66}.mode-card strong{font-size:14px;letter-spacing:.09em;color:#effaff}.mode-card small{font-size:11px;line-height:1.5;color:#91afc4;min-height:32px}.mode-card b{margin-top:auto;padding-top:12px;color:#65d8ff;font-size:10px;letter-spacing:.12em}.mode-card b i{font-style:normal;margin-left:8px}.mode-card.coop{border-color:#49d7b34a}.mode-card.coop .mode-icon,.mode-card.coop b{color:#65e8c1}.mode-card.duel{border-color:#e16b7c4a}.mode-card.duel .mode-icon,.mode-card.duel b{color:#ff8796}
-.menu-bottom-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:12px}.menu-panel{border:1px solid #4c90b333;border-radius:10px;padding:18px;background:#081727aa;min-width:0}
-.panel-title{display:flex;justify-content:space-between;align-items:center}.panel-title h2{font-size:18px;letter-spacing:.02em;margin:5px 0 0;color:#e1f4ff}.panel-art{font-size:28px;color:#4bbfe8}.menu-panel>p{font-size:11px;line-height:1.6;color:#8daabd;margin:12px 0}
-.room-row{display:flex;gap:6px}.room-row input,#menu select{min-width:0;background:#030b14;color:#c9f1ff;border:1px solid #32617c;border-radius:5px;padding:11px;font:inherit;font-size:11px;letter-spacing:.1em}.room-row input{flex:1;text-transform:uppercase}.room-row button{margin:0;padding:8px 12px;border-radius:5px}
-.mode-label{display:block;margin:12px 0 6px;color:#7295aa;font-size:9px;letter-spacing:.15em}.menu-panel select{width:100%;letter-spacing:0}.room-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.room-actions button{margin:0;padding:11px 8px;font-size:10px;letter-spacing:.1em;border-radius:5px}.primary-action{background:linear-gradient(100deg,#087da8,#145b91);border-color:#4ed5ff;color:white}.secondary-action{background:#10283a;border-color:#4383a2}.cancel-action{margin:9px 0 0!important}#qStart{box-shadow:0 0 18px #20b8ff55;animation:startPulse 1.8s ease-in-out infinite}@keyframes startPulse{50%{filter:brightness(1.25);box-shadow:0 0 25px #20b8ff99}}.network-status{min-height:15px!important;color:#ffd66b!important}
-.manual-details{margin-top:10px;border-top:1px solid #37617a55;padding-top:10px}.manual-details summary,.help-details summary{cursor:pointer;color:#8dbbd2;font-size:10px;letter-spacing:.08em}.manual-details .cols{margin-top:12px}.manual-details .cols>div{min-width:180px}.manual-details textarea{border-radius:4px;padding:7px}
-.setting-row{display:flex;justify-content:space-between;align-items:center;margin-top:19px;font-size:11px;color:#b8d2e1}.setting-row output{color:#64d7ff;font-weight:bold}#menu #sens{width:100%;accent-color:#50cfff;margin:14px 0 3px}.setting-hint{font-size:10px;color:#708da2;line-height:1.5}.options-action{width:100%;display:flex;justify-content:space-between;margin:18px 0 0;padding:11px;border-radius:5px;font-size:10px;letter-spacing:.08em}.quick-tip{margin-top:17px;padding:12px;border-left:2px solid #51d8bd;background:#0b282a66}.quick-tip span{font-size:9px;color:#62e5c5;letter-spacing:.13em}.quick-tip p{font-size:10px;line-height:1.6;color:#9ab9c4;margin:7px 0 0}
-.help-details{margin-top:17px;padding:13px 2px;border-top:1px solid #4c90b333;border-bottom:1px solid #4c90b333}.help-details summary{display:flex;justify-content:space-between}.help-content{padding:10px 5px 0}.help-content .help{font-size:11px;color:#91aebf;line-height:1.7}.help-content b{color:#c8edff}
-.menu-footer{padding-top:15px;font-size:8px}.menu-footer b{color:#51cfff}
-@media(max-width:720px){#menu{align-items:flex-start;padding:10px 7px}.menu-grid,.mode-grid{grid-template-columns:1fr 1fr}.mode-card{min-height:165px!important}.menu-bottom-grid{grid-template-columns:1fr}.menu-hero{padding:22px 5px}.menu-footer{font-size:7px;letter-spacing:.08em}}
-@media(max-width:440px){.mode-grid{grid-template-columns:1fr}.mode-card{min-height:130px!important}.mode-card small{min-height:0}.menu-topline{font-size:8px}.menu-panel{padding:14px}.room-row button{padding:7px 9px}}
-</style>
+   <button id="qCancel" style="display:none;width:100%;margin:.3em 0">✖ CANCELAR</button>
+   <p id="ns"></p>
+   <details><summary>Conexión manual por códigos (si la rápida no funciona)</summary><div class="cols">
+    <div><b>ANFITRIÓN</b><button id="bHost">1. Crear código</button><textarea id="oc" readonly placeholder="Tu código: envíaselo al rival"></textarea><button class="cp" data-t="oc">📋 Copiar código</button><textarea id="ia" placeholder="2. Pega aquí la respuesta del rival (se conecta solo al pegar)"></textarea><button id="bConn">3. Conectar</button></div>
+    <div><b>INVITADO</b><textarea id="ic" placeholder="1. Pega el código del anfitrión (genera la respuesta solo al pegar)"></textarea><button id="bJoin">2. Generar respuesta</button><textarea id="oa" readonly placeholder="Envía esta respuesta al anfitrión"></textarea><button class="cp" data-t="oa">📋 Copiar respuesta</button></div>
+   </div></details>
+   <details><summary>Red y privacidad</summary><p class="note">La conexión rápida usa el código de sala para intercambiar los datos de conexión a través de un servicio público de señalización (broker PeerJS; si no responde, ntfy.sh). Son servicios externos y esos datos incluyen direcciones de red, así que usa un código aleatorio como el 🎲. Después los datos del juego van directos entre jugadores (P2P). La conexión manual no usa ese servicio. Para atravesar NAT se usan servidores STUN públicos (Google, Cloudflare); en redes muy restrictivas haría falta un servidor TURN. Three.js se carga por CDN, por lo que se necesita internet.</p></details>
+  </section>
+  <section id="tab-gd" style="display:none">
+   <details open><summary><b>🚀 Controles de nave</b></summary><ul class="gl">
+    <li>Ratón (o flechas): la cámara orbita y la nave sigue tu mira · <kbd>W</kbd>/<kbd>S</kbd> avance/freno · <kbd>A</kbd>/<kbd>D</kbd> lateral · <kbd>R</kbd>/<kbd>C</kbd> subir/bajar</li>
+    <li>Clic (o <kbd>G</kbd>) dispara · <kbd>Shift</kbd> turbo · <kbd>Espacio</kbd> pirueta esquivando (<kbd>A</kbd>/<kbd>D</kbd> elige lado, invulnerable un instante) · <kbd>1</kbd>-<kbd>6</kbd> maniobras</li>
+    <li><kbd>X</kbd> asistencia de inercia ON/OFF · <kbd>V</kbd> cabina / 3ª persona · <kbd>T</kbd> ayuda de puntería (marca amarilla = objetivo fijado) · <kbd>P</kbd> pausa</li>
+    <li><b>Sifón de combustible (COOP):</b> mantén <kbd>F</kbd> con una nave enemiga a menos de 160 m. Un anillo naranja la marca y se vuelve verde al sifonear; cada nave tiene combustible limitado y cuanto más lejos, menos eficiencia.</li>
+    <li>Tus láseres son <span style="color:#3aa0ff">azules</span>; los enemigos disparan <span style="color:#f55">rojo</span> o <span style="color:#5f5">verde</span>. El círculo verde de la pantalla indica hacia dónde te desplazas realmente.</li></ul></details>
+   <details><summary><b>🪐 Planetas y COOP</b></summary><ul class="gl">
+    <li>Viaja a un planeta y pulsa <kbd>ENTER</kbd> para aterrizar. Tras la entrada en la atmósfera <b>aparcas la nave tú mismo</b>: pilótala hasta el círculo verde (sigue la columna de luz), frena a ≤14 m/s, nívela y desciende con <kbd>C</kbd>. El compañero puede acompañarte con <kbd>ENTER</kbd>.</li>
+    <li>En superficie: <kbd>WASD</kbd>, <kbd>Espacio</kbd> salto, clic dispara, <kbd>Shift</kbd> correr, <kbd>V</kbd> espada láser (enfriamiento 1,5 s).</li>
+    <li>Supera las 3 oleadas para desbloquear el despegue y la exploración libre. Después aparecen jefes aleatorios cada 60-180 s y los enemigos normales llegan con calma.</li>
+    <li>Láser y boost gastan energía: el láser se recupera un poco con los orbes verdes; ambos se recargan en los círculos de los planetas o sifoneando naves enemigas en el espacio. <kbd>ENTER</kbd> junto a tu nave: despegar.</li>
+    <li>Minimapa arriba a la derecha: <kbd>M</kbd> cambia el zoom; el terreno explorado se recuerda. <kbd>I</kbd> inventario · <kbd>Ctrl</kbd> usar batería · <kbd>H</kbd> desplegar moto holográfica.</li></ul></details>
+   <details><summary><b>🏍 Motos y gasolina</b></summary><ul class="gl">
+    <li>Cada planeta tiene una moto aparcada junto al camino de la aldea, con poca gasolina. <kbd>Q</kbd> montar/bajar (frena antes de bajar).</li>
+    <li><kbd>W</kbd> acelerar · <kbd>S</kbd> frenar/marcha atrás · <kbd>A</kbd>/<kbd>D</kbd> girar · <kbd>Espacio</kbd> freno de mano (derrapes; en el hielo se desliza). Sin gasolina el motor se para.</li>
+    <li>En las <b>gasolineras</b> (F en el minimapa) coloca la moto dentro del círculo naranja para repostar gratis. <kbd>B</kbd> compra un bidón ($45) y <kbd>J</kbd> lo usa para repostar la moto cercana. Tu moto deja una estela de luz.</li></ul></details>
+  </section>
+ </main>
+ <footer class="mf">STAR DUEL · requiere conexión a internet (Three.js por CDN) · las teclas se pueden cambiar en OPCIONES</footer>
+</div></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 'use strict';
@@ -140,8 +134,6 @@ const saveS=()=>{try{localStorage.setItem('sd_opt',JSON.stringify(S))}catch(e){}
 const KB=(k,n)=>k[S.kb[n]]||(n==='boost'&&S.kb.boost==='ShiftLeft'&&k.ShiftRight);
 const PRE=[{res:.6,part:.35,fx:.4,dd:600,ast:.3},{res:.85,part:.65,fx:.7,dd:900,ast:.6},{res:1,part:1,fx:1,dd:1300,ast:1},{res:1.25,part:1,fx:1,dd:1500,ast:1}];
 const $=i=>document.getElementById(i),V=(x=0,y=0,z=0)=>new THREE.Vector3(x,y,z),rnd=(a,b)=>a+Math.random()*(b-a),now=()=>performance.now()/1000;
-
-try{const sx=document.getElementById('sens'),sv=document.getElementById('sensVal');if(sx&&sv){const paint=()=>sv.textContent=Number(sx.value).toFixed(1)+'×';paint();sx.addEventListener('input',paint)}}catch(e){}
 let ac=null;// audio
 function sfx(f,d,t='square',v=.04){if(!ac)return;v*=S.vol.g*S.vol.s*(d<=.13&&f>=300?S.vol.w:f<=170?S.vol.x:1);if(v<=.0005)return;const o=ac.createOscillator(),g=ac.createGain(),n=ac.currentTime;o.type=t;o.frequency.setValueAtTime(f,n);o.frequency.exponentialRampToValueAtTime(Math.max(20,f*.3),n+d);g.gain.setValueAtTime(v,n);g.gain.exponentialRampToValueAtTime(.001,n+d);o.connect(g);g.connect(ac.destination);o.start();o.stop(n+d)}
 function segHit(a,b,c,r){const ab=b.clone().sub(a),t=Math.max(0,Math.min(1,c.clone().sub(a).dot(ab)/(ab.lengthSq()||1)));return a.clone().addScaledVector(ab,t).distanceToSquared(c)<r*r}
@@ -1298,16 +1290,15 @@ class MultiplayerManager{
   for(let k=0;k<3&&!ws;k++){try{ws=await this.pjOpen(id,on)}catch(e){if(e.message==='ID-TAKEN'&&k<2){await this.sleep(1500);if(this.qid!==my)return;continue}if(e.message==='ID-TAKEN')throw this.fatal('Ese código de sala ya está en uso: pulsa 🎲 para generar otro');throw e}}
   if(this.qid!==my){try{ws.close()}catch(e){}return}this.pj=ws;
   st('Sala «'+room.toUpperCase()+'» creada. Dile el código (o pásale el enlace 🔗) a tu compañero. Esperando… (hasta 10 min)');
-  const end=Date.now()+60000;while(this.qid===my&&!this.open&&Date.now()<end){await this.sleep(300);if(ws.readyState>1)throw Error('Se perdió el servicio principal de salas')}
-  try{ws.close()}catch(e){}if(this.qid===my&&!this.open)throw Error('Tiempo agotado en el servicio principal; cambiando al servicio alternativo…')}
+  const end=Date.now()+600000;while(this.qid===my&&!this.open&&Date.now()<end){await this.sleep(500);if(ws.readyState>1)throw this.fatal('Se perdió la conexión con el servicio de salas. Vuelve a crear la sala')}
+  try{ws.close()}catch(e){}if(this.qid===my&&!this.open)throw this.fatal('Nadie se unió a la sala en 10 minutos. Vuelve a crearla')}
  async quickJoinA(room,st){this.close();const my=this.qid,hid=this.pjId(room);let ans=null,gone=false;
   const ws=await this.pjOpen('stardualg'+Math.random().toString(36).slice(2,10),m=>{if(m.src!==hid)return;if(m.type==='ANSWER')ans=m.payload;else if(m.type==='EXPIRE')gone=true});this.pj=ws;
   this.isHost=false;this.room=this.hash(room);this.mk();await this.pc.setLocalDescription(await this.pc.createOffer());await this.gather();if(this.qid!==my){return 'cancel'}
   ws.send(JSON.stringify({type:'OFFER',dst:hid,payload:{d:this.pc.localDescription,r:this.room}}));st('Sala encontrada en el servicio. Esperando al anfitrión…');
-  const end=Date.now()+60000;while(!ans&&!gone&&this.qid===my&&Date.now()<end)await this.sleep(200);
+  const end=Date.now()+12000;while(!ans&&!gone&&this.qid===my&&Date.now()<end)await this.sleep(200);
   if(this.qid!==my)return 'cancel';if(!ans){try{ws.close()}catch(e){}return null}
-  if(ans.r!==this.room)throw this.fatal('El código de sala no coincide');this.mode=ans.m;await this.pc.setRemoteDescription(ans.d);st('Conectando con el anfitrión…');try{ws.close()}catch(e){}
-  try{await this.waitOpen(my,25000);return this.qid===my?true:'cancel'}catch(e){while(this.qid===my&&Date.now()<end)await this.sleep(250);return null}}
+  if(ans.r!==this.room)throw this.fatal('El código de sala no coincide');this.mode=ans.m;await this.pc.setRemoteDescription(ans.d);st('Conectando con el anfitrión…');try{ws.close()}catch(e){}await this.waitOpen(my,25000);return this.qid===my?true:'cancel'}
  // --- transporte B
  async pub(tp,txt,st){if(txt.length>3900)throw this.fatal('Los datos de conexión son demasiado grandes para la conexión rápida: usa la conexión manual');
   for(let i=0;i<4;i++){let r;try{r=await fetch('https://ntfy.sh/'+tp,{method:'POST',body:txt})}catch(e){throw this.fatal('No se pudo contactar con el servicio de salas (¿sin internet o bloqueado?). Usa la conexión manual')}
@@ -1328,7 +1319,7 @@ class MultiplayerManager{
   if(this.qid!==my)return;if(!got)throw this.fatal('Nadie se unió a la sala en 5 minutos. Vuelve a crearla');st('Compañero encontrado. Conectando…');await this.pc.setRemoteDescription(got.d);return this.waitOpen(my,25000)}
  async quickJoinB(room,st){this.close();const my=this.qid,tp=this.topic(room);st('Buscando la sala «'+room.toUpperCase()+'» (servicio alternativo)…');let offer=null,bt=0;
   // los mensajes guardados llegan de más antiguo a más reciente: tras el primero se espera un instante para quedarse con el último
-  await this.listen(tp+'-o','10m',async m=>{try{const o=await this.unpack(m.message);if(o&&o.d&&o.r===this.hash(room)){if(!offer||m.time>=offer.t){offer=Object.assign(o,{t:m.time})}if(!bt)bt=setTimeout(()=>{if(this.ac)this.ac.abort()},1200)}}catch(e){}return false},Date.now()+180000,my,()=>!!offer&&bt);
+  await this.listen(tp+'-o','10m',async m=>{try{const o=await this.unpack(m.message);if(o&&o.d&&o.r===this.hash(room)){if(!offer||m.time>=offer.t){offer=Object.assign(o,{t:m.time})}if(!bt)bt=setTimeout(()=>{if(this.ac)this.ac.abort()},1200)}}catch(e){}return false},Date.now()+45000,my,()=>!!offer&&bt);
   clearTimeout(bt);if(this.qid!==my)return;if(!offer)throw this.fatal('No se encontró la sala «'+room.toUpperCase()+'». Comprueba el código y que el anfitrión haya pulsado «Crear sala» hace poco');
   const ans=await this.guestFrom(offer,room),my2=this.qid;await this.pub(tp+'-a',await this.pack(JSON.parse(atob(ans))),st);st('Sala encontrada. Conectando con el anfitrión…');return this.waitOpen(my2,30000)}
  // --- dispatchers
@@ -1337,7 +1328,7 @@ class MultiplayerManager{
   return this.quickHostB(room,mode,st)}
  async quickJoin(room,st){room=room.trim();if(!room)throw Error('Escribe el código de sala de tu compañero');st('Buscando la sala «'+room.toUpperCase()+'»…');let r=null;
   try{r=await this.quickJoinA(room,st)}catch(e){if(e.fatal)throw e}
-  if(r)return;st('El servicio principal no completó la conexión; cambiando al alternativo…');return this.quickJoinB(room,st)}
+  if(r)return;st('No hay sala en el servicio principal; probando el alternativo…');return this.quickJoinB(room,st)}
  send(ch,o){const c=ch==='st'?this.st:this.ev;if(this.open&&c&&c.readyState==='open')c.send(JSON.stringify(o))}
  close(){this.qid++;if(this.pj){try{this.pj.close()}catch(e){}this.pj=null}if(this.ac){try{this.ac.abort()}catch(e){}this.ac=null}this.open=false;if(this.pc){try{this.pc.close()}catch(e){}this.pc=null}}
  tick(dt){this.t+=dt;if(this.t<.05)return;this.t=0;const p=this.G.p,r=p.root,q=r.quaternion;
@@ -1361,9 +1352,10 @@ class UIManager{
   const link=()=>location.href.split('#')[0]+'#sala='+encodeURIComponent($('room').value.trim().toUpperCase());
   const keep=v=>{try{localStorage.setItem('sd_room',v)}catch(e){}};
   $('qLink').onclick=async()=>{const v=$('room').value.trim();if(!v){st('Primero crea o genera un código de sala');return}st(await cb(link())?'Enlace de invitación copiado: tu compañero solo tiene que abrirlo y pulsar «Unirse». (Si abres el juego desde un archivo local, el enlace solo sirve en tu equipo: mejor pásale el código.)':'No se pudo copiar automáticamente el enlace.')};
-  $('qCancel').onclick=()=>{G.net.close();busy(false);const qs=$('qStart');if(qs){qs.style.display='none';qs.disabled=true}st('Conexión cancelada.')};
-  $('qHost').onclick=async()=>{AC();if(!$('room').value.trim())$('room').value=gen();const v=$('room').value.trim();keep(v);await cb(v);const qs=$('qStart');if(qs){qs.style.display='block';qs.disabled=true;qs.textContent='ESPERANDO AL JUGADOR…'}busy(true);try{await G.net.quickHost(v,$('mmode').value,st)}catch(e){err(e);if(qs)qs.style.display='none'}finally{busy(false)}};
+  $('qCancel').onclick=()=>{G.net.close();busy(false);st('Conexión cancelada.')};
+  $('qHost').onclick=async()=>{AC();if(!$('room').value.trim())$('room').value=gen();const v=$('room').value.trim();keep(v);await cb(v);busy(true);try{await G.net.quickHost(v,$('mmode').value,st)}catch(e){err(e)}finally{busy(false)}};
   $('qJoin').onclick=async()=>{AC();keep($('room').value.trim());busy(true);try{await G.net.quickJoin($('room').value,st)}catch(e){err(e)}finally{busy(false)}};
+  document.querySelectorAll('.mtabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.mtabs button').forEach(x=>x.classList.toggle('on',x===b));$('tab-mp').style.display=b.dataset.tab==='mp'?'block':'none';$('tab-gd').style.display=b.dataset.tab==='gd'?'block':'none'});
   try{const h=/#sala=([A-Za-z0-9_-]{1,40})/.exec(location.hash),sv=localStorage.getItem('sd_room');if(h){$('room').value=decodeURIComponent(h[1]).toUpperCase();st('Sala «'+$('room').value+'» recibida por enlace: pulsa «Unirse a la sala».')}else if(sv)$('room').value=sv}catch(e){}
   document.querySelectorAll('.cp').forEach(b=>b.onclick=async()=>{const v=$(b.dataset.t).value;if(!v||v==='Generando…'){st('Aún no hay nada que copiar');return}st(await cb(v)?'Copiado al portapapeles.':'No se pudo copiar automáticamente: selecciona el texto y cópialo a mano.')});
   $('ia').addEventListener('paste',()=>setTimeout(()=>$('bConn').click(),60));$('ic').addEventListener('paste',()=>setTimeout(()=>$('bJoin').click(),60));
@@ -1463,18 +1455,13 @@ class GameManager{
   if(d.t>=d.dur)this.finishDeath()}
  end(t){this.state='over';this.G.net.close();document.exitPointerLock&&document.exitPointerLock();this.G.ui.end(t)}
  checkEnd(){if(this.sc.me>=5)this.end('¡VICTORIA! '+this.sc.me+' — '+this.sc.opp);else if(this.sc.opp>=5)this.end('DERROTA '+this.sc.me+' — '+this.sc.opp)}
- onPeer(host){$('ns').textContent='¡Conectado!';this.showLobby(host);
-  const quickStart=$('qStart');if(quickStart)quickStart.style.display='none';
-  // La conexión P2P ya está abierta en ambos extremos. El anfitrión envía
-  // el evento de inicio y el invitado entra al recibirlo.
-  if(host)setTimeout(()=>{if(this.lobby&&this.G.net.open)$('lbGo').click()},350);
- }
+ onPeer(host){$('ns').textContent='¡Conectado!';this.showLobby(host)}
  showLobby(host){const G=this.G,md=G.net.mode==='coop'?'COOP (aventura)':'PvP 1 vs 1';this.lobby=true;$('lobby').style.display='flex';
-  $('lbt').textContent=host?'¡Tu compañero se ha conectado! La partida comenzará automáticamente en modo: '+md+'.':'Conectado con el anfitrión. La partida comenzará automáticamente en modo: '+md+'.';
+  $('lbt').textContent=host?'Tu compañero se ha conectado. Modo: '+md+'. Inicia la partida cuando ambos estéis listos.':'Conectado con el anfitrión. Modo: '+md+'. Esperando a que el anfitrión inicie la partida…';
   $('lbGo').style.display=host?'block':'none';
   $('lbGo').onclick=()=>{if(!this.lobby||!G.net.open)return;const m=G.net.mode==='coop'?'coop':'pvp';G.ui.lockReq();G.net.send('ev',{t:'go',m});this.start(m,true)};
   $('lbX').onclick=()=>{G.net.close();this.hideLobby();$('ns').textContent='Desconectado.'}}
- hideLobby(){this.lobby=false;const l=$('lobby');if(l)l.style.display='none';const qs=$('qStart');if(qs){qs.style.display='none';qs.disabled=true}}
+ hideLobby(){this.lobby=false;const l=$('lobby');if(l)l.style.display='none'}
  onGo(m){if(!this.lobby||this.G.net.isHost)return;this.start(m.m==='coop'?'coop':'pvp',false)}
  onPeerLeft(){if(this.lobby){this.hideLobby();$('ns').textContent='Tu compañero se desconectó antes de empezar.';return}if(this.state==='playing'&&this.mode==='pvp')this.end('El rival se ha desconectado');else if(this.mode==='coop'&&this.state==='playing'){this.G.veh.peerLeft();this.G.rem.live=false;this.G.rem.root.visible=false;this.G.coop.rc.visible=false;this.G.ui.toast('Compañero desconectado')}}
  onNet(m){const G=this.G,r=G.rem;if(m&&m.t==='go'){this.onGo(m);return}if(this.mode==='coop'&&G.coop.net(m))return;
