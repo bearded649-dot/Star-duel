@@ -176,9 +176,9 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
    <details><summary><b>🪐 Planetas y COOP</b></summary><ul class="gl">
     <li>Viaja a un planeta y pulsa <kbd>ENTER</kbd> para aterrizar. Tras la entrada en la atmósfera <b>aparcas la nave tú mismo</b>: pilótala hasta el círculo verde (sigue la columna de luz), frena a ≤14 m/s, nívela y desciende con <kbd>C</kbd>. El compañero puede acompañarte con <kbd>ENTER</kbd>.</li>
     <li>En superficie: <kbd>WASD</kbd>, <kbd>Espacio</kbd> salto, clic dispara, <kbd>Shift</kbd> correr, <kbd>V</kbd> espada láser (enfriamiento 1,5 s).</li>
-    <li><b>Novedades de los planetas:</b> setas y luciérnagas (bosque), árboles calcinados, costillas fósiles y braseros (volcán), abetos, flores de escarcha y muñecos de nieve (tundra). Cada bioma tiene su clima (esporas, ceniza y brasas, nieve) y cada cierto tiempo cae una <b>lluvia de meteoritos</b>: recoge los fragmentos brillantes para ganar dinero y minerales; en el espacio verás pasar cometas. Puntos de interés nuevos: <b>campamentos abandonados</b> (la hoguera cura el casco con una reserva limitada y no funciona en combate), <b>naves siniestradas</b>, el <b>estanque espiritual</b> (recarga escudo y energía), el <b>cementerio de colosos</b> y el <b>pilar de aurora</b>. Descubrirlos da recompensa como el resto de puntos del mapa.</li><li>Supera las 3 oleadas para desbloquear el despegue y la exploración libre. Después aparecen jefes aleatorios cada 60-180 s y los enemigos normales llegan con calma.</li>
+    <li><b>Más dificultad (sin más daño):</b> las oleadas son más numerosas y rápidas, los enemigos te rodean en pinza y esquivan, y los jefes tienen más vida, fases con refuerzos, ataques especiales desde el inicio y menos tiempo de aviso. El daño de los enemigos no ha cambiado.</li><li><b>Espada y regeneradores:</b> cada baja cuerpo a cuerpo te cura un 5 % de casco y recupera un 30 % de BOOST (la baja en sí, no el drop). Las plataformas de aterrizaje recargan el escudo más rápido, con más reserva y se recuperan antes.</li><li><b>Novedades de los planetas:</b> setas y luciérnagas (bosque), árboles calcinados, costillas fósiles y braseros (volcán), abetos, flores de escarcha y muñecos de nieve (tundra). Cada bioma tiene su clima (esporas, ceniza y brasas, nieve) y cada cierto tiempo cae una <b>lluvia de meteoritos</b>: recoge los fragmentos brillantes para ganar dinero y minerales; en el espacio verás pasar cometas. Puntos de interés nuevos: <b>campamentos abandonados</b> (la hoguera cura el casco con una reserva limitada y no funciona en combate), <b>naves siniestradas</b>, el <b>estanque espiritual</b> (recarga escudo y energía), el <b>cementerio de colosos</b> y el <b>pilar de aurora</b>. Descubrirlos da recompensa como el resto de puntos del mapa.</li><li>Supera las 3 oleadas para desbloquear el despegue y la exploración libre. Después aparecen jefes aleatorios cada 60-180 s y los enemigos normales llegan con calma.</li>
     <li>Láser y boost gastan energía: el láser se recupera un poco con los orbes verdes; ambos se recargan en los círculos de los planetas o sifoneando naves enemigas en el espacio. <kbd>ENTER</kbd> junto a tu nave: despegar.</li>
-    <li>Minimapa arriba a la derecha: <kbd>M</kbd> cambia el zoom; el terreno explorado se recuerda. <kbd>I</kbd> inventario · <kbd>Ctrl</kbd> usar batería · <kbd>H</kbd> desplegar moto holográfica.</li></ul></details>
+    <li>Minimapa arriba a la derecha: <kbd>M</kbd> cambia el zoom; el terreno explorado se recuerda mientras dura la partida (cada vez que entras en Aventura/COOP todo el progreso empieza de cero). <kbd>I</kbd> inventario · <kbd>Ctrl</kbd> usar batería · <kbd>H</kbd> desplegar moto holográfica.</li></ul></details>
    <details><summary><b>🏍 Motos y gasolina</b></summary><ul class="gl">
     <li>Cada planeta tiene una moto aparcada junto al camino de la aldea, con poca gasolina. <kbd>Q</kbd> montar/bajar (frena antes de bajar).</li>
     <li><kbd>W</kbd> acelerar · <kbd>S</kbd> frenar/marcha atrás · <kbd>A</kbd>/<kbd>D</kbd> girar · <kbd>Espacio</kbd> freno de mano (derrapes; en el hielo se desliza). Sin gasolina el motor se para. <kbd>Shift</kbd> turbo: 5 s a 200 km/h por un 15 % de gasolina (sin consumo mientras dura); después 1,5 s limitado a 60 km/h, con 10 s de enfriamiento desde que acaba.</li>
@@ -804,6 +804,14 @@ class ShopSystem{
  snap(){const G=this.G,i=G.inv,v=[];for(let pi=0;pi<3;pi++)for(const q of G.veh.S[pi])if(q.own)v.push([pi,q.id,Math.round(q.x),Math.round(q.z),+q.h.toFixed(2),Math.round(q.f)]);
   return JSON.stringify({m:Math.floor(G.money),b:i.battery,j:i.jerry,h:i.holo,t:i.tok,hf:i.hf,v,mn:i.min,up:G.up,xd:EXPL?EXPL.xd():[],pt:G.pet?1:0})}
  save(){if(!this.ld)return;try{const t=this.snap();if(t!==this.sv){this.sv=t;localStorage.setItem(this.key(),t)}}catch(e){}}
+ // cada vez que se inicia Aventura/COOP el progreso empieza de cero: dinero, inventario, minerales, mejoras, mascota, vehículos propios, exploración/minimapa, hallazgos, buffs y reservas de regeneradores
+ fresh(){const G=this.G;this.ld=true;try{localStorage.removeItem('sd_inv_H');localStorage.removeItem('sd_inv_G');localStorage.removeItem('sd_expl')}catch(e){}
+  G.money=0;Object.assign(G.inv,{jerry:0,battery:0,holo:0,tok:1,hf:[]});for(const k in G.inv.min)G.inv.min[k]=0;for(const k in G.up)G.up[k]=0;G.pet=0;
+  if(EXPL){EXPL.fd=new Set();EXPL.dep.clear();EXPL.dg.clear();EXPL.ms=[null,null,null];EXPL.clearMesh();EXPL.mpi=-1;EXPL.applyUp()}
+  if(G.ex){G.ex.s=[new Set(),new Set(),new Set()];G.ex.pend=[[],[],[]];G.ex.last=[null,null,null];G.ex.dirty=0}
+  if(PLX){PLX.bf={heal:0,rage:0,aegis:0};PLX.clearMesh();PLX.mpi=-1}
+  REGEN.clear();if(G.eco){Object.assign(G.eco,{kt:[],inf:{},inc:0,out:0,lm:null,fm:1,fw:0})}
+  this.sv=''}
  load(){const G=this.G;this.ld=true;let o=null;try{o=JSON.parse(localStorage.getItem(this.key())||'null')}catch(e){}
   const n=(x,a,b)=>Number.isFinite(+x)?Math.max(a,Math.min(b,Math.floor(+x))):a;
   if(!o||typeof o!=='object'){G.money=0;Object.assign(G.inv,{jerry:0,battery:0,holo:0,tok:1,hf:[]});this.sv='';return}// perfil nuevo: sin motos y con la ficha inicial
@@ -1192,7 +1200,7 @@ class CoopSystem{
      ch.rotation.set(0,mv?sn*.06*w:0,mv?-sn*.04*w:0);ch.position.set(0,0,0)}
     hd.rotation.y=Math.sin(t*.7)*.12*(1-w);ch.scale.y=1+.012*Math.sin(t*2.2)}};
   rf.rotation.x=0;g.visible=false;return g}
- begin(host){const G=this.G;this.end();this.host=host;this.auth=!!host;this.ws=null;this.wsT=0;this.eid=0;this.did=0;G.p.laser=this.laserCap();G.p.boost=this.boostCap();this.wave=0;this.wt=8;this.sv=null;G.rem.cn=0;G.rem.au=0;G.rem.pt=0;this.clr=[0,0,0];this.unlock=false;this.gw=0;this.pLand=null;this.paid.clear();this.fbd=[0,0,0];G.money=0;G.veh.reset();G.shop.load();this.exSync();G.gm.spawn(V(host?-25:25,0,0),false);G.rem.live=false;G.rem.root.visible=false;G.rem.alive=true;G.rem.gr=undefined;G.ui.toast('COOP: viaja a un planeta y pulsa ENTER para aterrizar',3500)}
+ begin(host){const G=this.G;this.end();this.host=host;this.auth=!!host;this.ws=null;this.wsT=0;this.eid=0;this.did=0;G.p.laser=this.laserCap();G.p.boost=this.boostCap();this.wave=0;this.wt=8;this.sv=null;G.rem.cn=0;G.rem.au=0;G.rem.pt=0;this.clr=[0,0,0];this.unlock=false;this.gw=0;this.pLand=null;this.paid.clear();this.fbd=[0,0,0];G.money=0;G.veh.reset();G.shop.fresh();this.exSync();G.gm.spawn(V(host?-25:25,0,0),false);G.rem.live=false;G.rem.root.visible=false;G.rem.alive=true;G.rem.gr=undefined;G.ui.toast('COOP: viaja a un planeta y pulsa ENTER para aterrizar',3500)}
  end(){const G=this.G;if(G.shop){G.shop.save();G.shop.close(true)}if(G.invui)G.invui.close(true);if(G.veh)G.veh.leave();this.ground=false;this.park=null;this.cine=null;this.swT=0;this.swCd=0;if(this.sw)this.sw.visible=false;this.spec=false;this.auth=true;this.ws=null;this.sv=null;$('dst').style.display='none';this.rvT=0;this.revP=0;$('rv').style.display='none';$('spb').style.display='none';$('dth').style.opacity=0;$('dtx').style.opacity=0;this.pc.userData.in.rotation.x=0;this.rc.userData.in.rotation.x=0;this.pc.visible=this.rc.visible=false;for(const d of this.drops)G.rd.gw.remove(d.m);this.drops=[];this.hzs=[];G.rd.setSpace(true);$('fx').style.opacity=0;this.lz=null;for(const i of['eb','co','pr','boss','lzh'])$(i).style.display='none'}
  enter(){const G=this.G,p=G.p;if(G.gm.mode!=='coop'||G.gm.state!=='playing'||p.dead||this.cine)return;
   if(this.ground){if(this.park){G.ui.toast('Primero aparca la nave: sitúala sobre el círculo verde y desciende despacio',2200);return}if(this.gp.distanceTo(PARK)<14){if(G.veh.me){G.ui.toast('Bájate de la moto antes de despegar',1800);return}if(this.unlock)this.takeoff();else G.ui.toast('Despegue bloqueado: supera las 3 oleadas ('+Math.min(3,this.gw)+'/3)',2200)}return}
@@ -1226,7 +1234,9 @@ class CoopSystem{
    const dr=G.rd.cam.position.clone().addScaledVector(cf,300).sub(o).normalize();if(c.lock){const t=c.lock;dr.lerp(t.root.position.clone().addScaledVector(t.vel,t.root.position.distanceTo(o)/260).sub(o).normalize(),.7).normalize()}
    G.combat.fire('p',o,dr,260,'blue',10*(G.fb?G.fb.dm:1));G.net.send('ev',{t:'f',p:o.toArray(),d:dr.toArray(),s:260});sfx(700,.12,'sawtooth',.03)}}
  crawl(e,dt){if(e.boss)return this.bossAI(e,dt);if(e.beh)return this.behave(e,dt);const G=this.G,ts=G.p.dead?[]:[[this.gp,G.p]];if(G.rem.live)ts.push([G.rem.tp,null]);if(!ts.length)ts.push([this.gp,G.p]);let b=ts[0],bd=1e9;for(const t of ts){const d=t[0].distanceTo(e.root.position);if(d<bd){bd=d;b=t}}
-  const dir=b[0].clone().sub(e.root.position);dir.y=0;if(e.k===4)dir.x+=Math.sin(now()*3+e.id)*dir.length()*.7;if(bd>2.6){dir.normalize();e.vel.set(dir.x*e.max,0,dir.z*e.max)}else e.vel.set(0,0,0);
+  const dir=b[0].clone().sub(e.root.position);dir.y=0;{const fa=Math.max(0,Math.min(1,(dir.length()-22)/30))*((e.id%2)?.7:-.7),c=Math.cos(fa),sn=Math.sin(fa),x=dir.x*c-dir.z*sn,z=dir.x*sn+dir.z*c;dir.x=x;dir.z=z}
+  if(e.k===4)dir.x+=Math.sin(now()*3+e.id)*dir.length()*.7;let spd=e.max;if(e.k===4){e.lg=(e.lg===undefined?rnd(2,4):e.lg)-dt;if(e.lg<=0){if(bd<16&&bd>4)spd*=1.9;if(e.lg<-.5)e.lg=rnd(3.5,5.5)}}
+  if(bd>2.6){dir.normalize();e.vel.set(dir.x*spd,0,dir.z*spd)}else e.vel.set(0,0,0);
   e.root.position.addScaledVector(e.vel,dt);e.root.position.y=e.r;e.cd-=dt;
   if(bd<=3.4&&e.cd<=0){e.cd=1;if(b[1])G.gm.damage(b[1],e.dmg);else G.net.send('ev',{t:'hit',d:e.dmg})}
   for(const o of G.gm.enemies)if(o!==e){const d=e.root.position.clone().sub(o.root.position);d.y=0;const l=d.length();if(l<e.r+o.r&&l>1e-3)e.root.position.addScaledVector(d.normalize(),(e.r+o.r-l)*.5)}}
@@ -1242,8 +1252,8 @@ class CoopSystem{
   const k=Math.random()<.65?EKB[pi]:5,e=this.mkAt(k,x,z);e.ev=true;if(k===5)e.cash=400;this.bevT=rnd(60,180);this.nt=Math.max(this.nt||0,10);
   G.ps.ring(e.root.position.clone().setY(.3),e.glow||0xff4444,2,40,1,1);G.cam.shake=Math.max(G.cam.shake,.6);G.ui.toast('¡JEFE! '+((EK[k]&&EK[k].A&&EK[k].A.n)||e.n||'GUARDIÁN')+' ha aparecido cerca',4200);sfx(70,1,'sawtooth',.12)}
  spawnLogic(dt){const G=this.G,gm=G.gm;if(this.ground&&this.unlock)this.bossEvTick(dt);this.wt-=dt;if(this.wt>0)return;
-  if(!this.ground){if(gm.enemies.length>=2){this.wt=3;return}this.wt=22;this.wave++;const boss=this.wave%4===0,n=1+(G.rem.live?2:1);
-   for(let i=0;i<n;i++){const k=boss&&i===0?2:(this.wave>1&&Math.random()<.4?1:0),e=gm.mkEnemy(k,++this.eid);e.root.position.copy(G.p.root.position).add(V(rnd(-1,1),rnd(-.4,.4),rnd(-1,1)).normalize().multiplyScalar(rnd(300,400)));G.rd.scene.add(e.root);gm.enemies.push(e)}
+  if(!this.ground){if(gm.enemies.length>=3){this.wt=3;return}this.wt=Math.max(12,20-this.wave);this.wave++;const boss=this.wave%4===0,n=Math.min(8,2+Math.floor(this.wave/2)+(G.rem.live?1:0)-(boss?1:0)),base=V(rnd(-1,1),rnd(-.4,.4),rnd(-1,1)).normalize();
+   for(let i=0;i<n;i++){const k=boss&&i===0?2:(this.wave>1&&Math.random()<Math.min(.65,.2+.07*this.wave)?1:0),e=gm.mkEnemy(k,++this.eid);e.root.position.copy(G.p.root.position).add(base.clone().multiplyScalar((i%2?-1:1)*rnd(300,400)).add(V(rnd(-60,60),rnd(-30,30),rnd(-60,60))));G.rd.scene.add(e.root);gm.enemies.push(e)}
    G.ui.toast(boss?'¡JEFE ESPACIAL!':'Oleada '+this.wave+': naves hostiles',2500)}
   else this.spawnGround()}
  swing(){const G=this.G,p=G.p;if(!this.ground||this.park||G.veh.me||p.dead||this.cine||G.paused||G.gm.state!=='playing'||this.swCd>0)return;
@@ -1256,8 +1266,11 @@ class CoopSystem{
   for(const l of[5.5,3])G.ps.emit(this.sw.position.clone().addScaledVector(tip,l),V(rnd(-1,1),rnd(0,2),rnd(-1,1)),G.ps.color(0x88ddff),.35,2);
   for(const e of G.gm.enemies){if(!e.ground||this.sh.has(e.id))continue;const dx=e.root.position.x-gp.x,dz=e.root.position.z-gp.z;if(Math.hypot(dx,dz)>6.5+e.r)continue;
    const df=Math.atan2(-dx,-dz)-by;if(Math.abs(Math.atan2(Math.sin(df),Math.cos(df)))>.4)continue;
-   this.sh.add(e.id);G.gm.hitEnemy(e,80*(1+.25*G.up.sword)*(PLX?PLX.rage():1));G.ps.burst(e.root.position,0x66ccff,12,35,.5,2);sfx(420,.12,'sawtooth',.05);G.cam.shake=Math.max(G.cam.shake,.25)}}
+   this.sh.add(e.id);{const dmg=80*(1+.25*G.up.sword)*(PLX?PLX.rage():1),pre=e.hull+(e.shield||0),guest=G.gm.mode==='coop'&&!G.coop.auth;G.gm.hitEnemy(e,dmg);
+    if(guest){if(pre<=dmg){const m=this.mk||(this.mk=new Map());if(m.size>40)m.clear();m.set(e.id,now())}}else if(e.dead)this.meleeKill()}G.ps.burst(e.root.position,0x66ccff,12,35,.5,2);sfx(420,.12,'sawtooth',.05);G.cam.shake=Math.max(G.cam.shake,.25)}}
  bonus(){return this.ground&&!this.G.net.open}
+ meleeKill(){const G=this.G,p=G.p;if(p.dead)return;p.hull=Math.min(p.maxHull,p.hull+p.maxHull*.05);p.boost=Math.min(this.boostCap(),p.boost+this.boostCap()*.3);
+  G.ps.ring(this.gp.clone().setY(.4),0x55ff99,1,7,.5,1);G.ps.burst(this.gp.clone().setY(1.2),0x55ff99,14,20,.6,2);sfx(760,.16,'triangle',.05);G.ui.toast('⚔ Baja cuerpo a cuerpo: +5% casco · +30% BOOST',1100)}
  padMk(){const G=this.G,ad=(c,o)=>new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:o,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide}),g=new THREE.Group();
   const r1=new THREE.Mesh(new THREE.RingGeometry(PK_R-.7,PK_R,56).rotateX(-Math.PI/2),ad(0x55ff88,.85)),r2=new THREE.Mesh(new THREE.RingGeometry(1.2,2.2,32).rotateX(-Math.PI/2),ad(0x55ff88,.6)),bm=new THREE.Mesh(new THREE.CylinderGeometry(.5,.5,160,10,1,true).translate(0,80,0),ad(0x55ff88,.3));
   g.add(r1,r2,bm);g.position.set(PARK.x,.15,PARK.z);G.rd.gw.add(g);this.padFx={g,bm,r1}}
@@ -1353,7 +1366,7 @@ class CoopSystem{
    if(h.t>=h.w){if(!h.d){if(!h.f){h.f=1;for(const q of ts)if(Math.hypot(q[0].x-h.x,q[0].z-h.z)<h.r)this.hurt(q,h.dmg)}}
     else{h.n-=dt;if(h.n<=0){h.n=h.iv||.5;for(const q of ts)if(Math.hypot(q[0].x-h.x,q[0].z-h.z)<h.r)this.hurt(q,h.dmg)}}}
    if(h.t>=h.w+h.d+.05)hs.splice(i,1)}}
- fbPhase(e,ph){const G=this.G,ep=e.root.position;e.cd=Math.max(e.cd,1.4);G.ps.shock(V(ep.x,.2,ep.z),e.glow,e.r*4,.9);G.ps.burst(ep.clone().setY(2),e.glow,40,40,.9,3.5);G.cam.shake=Math.max(G.cam.shake,.9);sfx(60,1,'sawtooth',.14);G.ui.toast('¡'+(e.n||'EL JEFE')+' entra en la fase '+ph+'!',2600)}
+ fbPhase(e,ph){const G=this.G,ep=e.root.position;if(G.gm.enemies.length<12){const n=ph+1,mk=e.mk!==undefined?e.mk:this.pick(.3);for(let i=0;i<n;i++){const a=i/n*6.283+rnd(0,1);this.mkAt(mk,ep.x+Math.cos(a)*(e.r+7),ep.z+Math.sin(a)*(e.r+7))}}e.cd=Math.max(e.cd,1.4);G.ps.shock(V(ep.x,.2,ep.z),e.glow,e.r*4,.9);G.ps.burst(ep.clone().setY(2),e.glow,40,40,.9,3.5);G.cam.shake=Math.max(G.cam.shake,.9);sfx(60,1,'sawtooth',.14);G.ui.toast('¡'+(e.n||'EL JEFE')+' entra en la fase '+ph+'!',2600)}
  fbNew(e,ts,b,F,n,ph,o,t){const G=this.G,ep=e.root.position,hex=e.glow,P=b[0],dm=e.dmg,tgs=ts.map(q=>q[0]);
   if(n==='roots'){for(const q of tgs){const d=q.clone().sub(ep);d.y=0;const L=d.length();d.normalize();const N=Math.min(7,Math.ceil(L/5));for(let i=1;i<=N;i++)this.hzAdd({x:ep.x+d.x*i*5,z:ep.z+d.z*i*5,r:3,w:.6+i*.12,dmg:dm*1.1,hex})}
    this.hzAdd({x:P.x,z:P.z,r:3.2,w:1.1,dmg:dm*1.3,hex});sfx(110,.4,'sawtooth',.08);return true}
@@ -1375,13 +1388,14 @@ class CoopSystem{
   else if(n==='volley'){if(e.ring){const N=4+2*ph,a0=rnd(0,6.28);for(let i=0;i<N;i++)this.msl(e,a0+i/N*6.283,1,1.4+.15*ph)}
    else{const N=(e.big?7:3)+2*(ph-1),base=t.clone().sub(o).normalize();for(let i=0;i<N;i++)G.combat.fire('e',o,base.clone().applyAxisAngle(V(0,1,0),(i-(N-1)/2)*.15),e.bs,e.bolt,e.dmg)}sfx(260,.3,'square',.07)}}
  behave(e,dt){const G=this.G,[b,bd,ts]=this.tg(e),ep=e.root.position,v=e.vel,dir=b[0].clone().sub(ep);dir.y=0;dir.normalize();e.cd-=dt;e.tel=0;
+   if(e.beh==='swarm'||e.beh==='dash'||e.beh==='brute'){const fa=Math.max(0,Math.min(1,(bd-22)/30))*((e.id%2)?.7:-.7),c=Math.cos(fa),sn=Math.sin(fa),x=dir.x*c-dir.z*sn,z=dir.x*sn+dir.z*c;dir.x=x;dir.z=z}
   if(bd<e.det)e.aggro=6;else e.aggro=(e.aggro||0)-dt;
   if(!(e.aggro>0)&&!e.ps){e.wt=(e.wt||0)-dt;if(e.wt<=0){e.wt=rnd(2,5);e.wa=rnd(0,6.28)}v.set(Math.cos(e.wa)*e.max*.25,0,Math.sin(e.wa)*e.max*.25);e.root.rotation.y=Math.atan2(-v.x,-v.z);ep.addScaledVector(v,dt);ep.y=e.cy;return}
   const tg=Math.atan2(-dir.x,-dir.z),ry=e.root.rotation.y;if(e.ps!=='act')e.root.rotation.y=ry+Math.atan2(Math.sin(tg-ry),Math.cos(tg-ry))*Math.min(1,(e.beh==='fb'?2.5:6)*dt);
   const F=V(-Math.sin(e.root.rotation.y),0,-Math.cos(e.root.rotation.y));
   switch(e.beh){
   case 'swarm':{const w=Math.sin(now()*5+e.id)*.6;v.set(dir.x+dir.z*w,0,dir.z-dir.x*w).normalize().multiplyScalar(bd>2.4?e.max:0);if(bd<3&&e.cd<=0){e.cd=.9;this.hurt(b,e.dmg)}break}
-  case 'range':{const m=bd>e.keep+6?1:bd<e.keep-8?-1:0;v.copy(dir).multiplyScalar(m*e.max);e.rc=(e.rc===undefined?1.5:e.rc)-dt;
+  case 'range':{const m=bd>e.keep+6?1:bd<e.keep-8?-1:0;v.copy(dir).multiplyScalar(m*e.max);{const sg=Math.sin(now()*1.1+e.id*2.3);v.x+=-dir.z*sg*e.max*.55;v.z+=dir.x*sg*e.max*.55}e.rc=(e.rc===undefined?1.5:e.rc)-dt;
    if(e.rc<=0&&bd<e.keep+22){e.rc=e.rate;const o=ep.clone().add(V(0,e.fy,0)).addScaledVector(F,1.6),t=b[0].clone().add(V(0,1,0));G.combat.fire('e',o,t.sub(o).normalize(),e.bs,e.bolt,e.dmg);sfx(240,.2,'square',.04)}break}
   case 'brute':{if(!e.ps){v.copy(dir).multiplyScalar(bd>e.sr*.6?e.max:0);if(bd<e.sr-1&&e.cd<=0){e.ps='wind';e.pt=.9}
     else if(e.thr){e.rc=(e.rc===undefined?2:e.rc)-dt;if(e.rc<=0&&bd>12&&bd<36){e.rc=e.rate;const o=ep.clone().add(V(0,e.fy,0)).addScaledVector(F,1.5),t=b[0].clone().add(V(0,1,0));G.combat.fire('e',o,t.sub(o).normalize(),e.bs,e.bolt,10);sfx(300,.15,'square',.04)}}}
@@ -1390,34 +1404,45 @@ class CoopSystem{
    else if(e.ps==='wind'){v.set(0,0,0);e.tel=1;e.pt-=dt;if(e.pt<=0){e.ps='act';e.pt=.55;e.hit=0}}
    else if(e.ps==='act'){v.copy(e.dv);for(const t of ts)if(!e.hit&&t[0].distanceTo(ep)<3.2){e.hit=1;this.hurt(t,e.dmg)}e.pt-=dt;if(e.pt<=0){e.ps='rec';e.pt=.8}}
    else{v.set(0,0,0);e.pt-=dt;if(e.pt<=0){e.ps='';e.cd=1.6}}break}
-  case 'fb':{const hr=e.hull/e.maxHull,ph=hr>.66?1:hr>.33?2:3,sp=e.max*(1+.2*(ph-1));if(e.phv!==ph){if(e.phv)this.fbPhase(e,ph);e.phv=ph}
-   if(!e.ps){v.copy(dir).multiplyScalar(bd>6?sp:0);if(e.cd<=0){const L=e.pat.concat(ph>1?e.pat2||[]:[],ph>2?e.pat3||[]:[]);e.pi=((e.pi===undefined?-1:e.pi)+1)%L.length;e.pn=L[e.pi];if(ph===3&&e.pat3&&Math.random()<.4)e.pn=e.pat3[Math.floor(Math.random()*e.pat3.length)];e.ps='wind';e.pt=FBW[e.pn]||.8;e.dv=dir.clone().multiplyScalar(40+8*ph)}}
+  case 'fb':{const hr=e.hull/e.maxHull,ph=hr>.66?1:hr>.33?2:3,sp=e.max*(1+.28*(ph-1));if(e.phv!==ph){if(e.phv)this.fbPhase(e,ph);e.phv=ph}
+   if(!e.ps){v.copy(dir).multiplyScalar(bd>6?sp:0);if(e.cd<=0){const L=e.pat.concat(ph>1?e.pat2||[]:[],ph>2?e.pat3||[]:[]);e.pi=((e.pi===undefined?-1:e.pi)+1)%L.length;e.pn=L[e.pi];if(ph===3&&e.pat3&&Math.random()<.4)e.pn=e.pat3[Math.floor(Math.random()*e.pat3.length)];e.ps='wind';e.pt=(FBW[e.pn]||.8)*(ph===3?.8:ph===2?.9:1);e.dv=dir.clone().multiplyScalar(40+8*ph)}}
    else if(e.ps==='wind'){v.set(0,0,0);e.tel=1;e.pt-=dt;if(e.pt<=0){e.ps='act';e.pt=FBA[e.pn]||.1;e.hit=0;e.ac=0;this.fbAct(e,ts,b,F)}}
-   else{if(e.pn==='charge'){v.copy(e.dv);if(bd<e.r+2.5&&!e.hit){e.hit=1;this.hurt(b,e.dmg*1.3)}}else v.set(0,0,0);if(e.pn==='spin'||e.pn==='breath'||e.pn==='blizzard')this.fbTick(e,ts,b,F,dt);e.pt-=dt;if(e.pt<=0){e.ps='';e.cd=[0,2.6,2,1.45][ph];v.set(0,0,0)}}break}}
+   else{if(e.pn==='charge'){v.copy(e.dv);if(bd<e.r+2.5&&!e.hit){e.hit=1;this.hurt(b,e.dmg*1.3)}}else v.set(0,0,0);if(e.pn==='spin'||e.pn==='breath'||e.pn==='blizzard')this.fbTick(e,ts,b,F,dt);e.pt-=dt;if(e.pt<=0){e.ps='';e.cd=[0,2.1,1.5,1.0][ph];v.set(0,0,0)}}break}}
   ep.addScaledVector(v,dt);ep.y=e.cy;
   for(const o of G.gm.enemies)if(o!==e&&o.ground){const d=ep.clone().sub(o.root.position);d.y=0;const l=d.length();if(l<e.r+o.r&&l>1e-3)ep.addScaledVector(d.normalize(),(e.r+o.r-l)*.5)}}
  spawnGround(){const G=this.G,gm=G.gm;if(this.unlock){this.freeSpawn();return}this.wt=1.1;
-  if(this.gq>0){if(gm.enemies.length<9)this.mkG(this.pick(this.gw===1?0:.55));this.wt=this.gw===1?1.8:1.2;this.gq--;return}
+  if(this.gq>0){if(gm.enemies.length<(this.gw===3?11:13))this.mkG(this.pick(this.gw===1?.15:.65));this.wt=this.gw===1?1.3:this.gw===2?.85:2.4;this.gq--;return}
   if(gm.enemies.length||this.gw>=3)return;
-  this.gw++;const w=this.gw;this.wt=1.5;
-  if(w===3){this.mkG(5);G.ui.toast('OLEADA 3/3 — ¡JEFE FINAL!',3500);sfx(70,1,'sawtooth',.12)}else{this.gq=(w===1?6:10)+(G.rem.live?3:0);G.ui.toast('OLEADA '+w+'/3',2200)}}
- mkG(k){const G=this.G,a=rnd(0,6.28),d=k===5?75:rnd(55,90),e=G.gm.mkEnemy(k,++this.eid);e.root.position.set(this.gp.x+Math.cos(a)*d,e.cy||e.r,this.gp.z+Math.sin(a)*d-10);G.rd.scene.add(e.root);G.gm.enemies.push(e)}
+  this.gw++;const w=this.gw;this.wt=1.5;this.ga=rnd(0,6.28);this.gn=0;
+  if(w===3){this.mkG(5);this.gq=G.rem.live?7:5;G.ui.toast('OLEADA 3/3 — ¡JEFE FINAL!',3500);sfx(70,1,'sawtooth',.12)}else{this.gq=(w===1?9:15)+(G.rem.live?4:0);G.ui.toast('OLEADA '+w+'/3',2200)}}
+ mkG(k){const G=this.G,a=k===5?rnd(0,6.28):(this.ga===undefined?(this.ga=rnd(0,6.28)):this.ga)+((this.gn=(this.gn||0)+1)%3)*2.094+rnd(-.45,.45),d=k===5?75:rnd(55,90),e=G.gm.mkEnemy(k,++this.eid);e.root.position.set(this.gp.x+Math.cos(a)*d,e.cy||e.r,this.gp.z+Math.sin(a)*d-10);G.rd.scene.add(e.root);G.gm.enemies.push(e)}
  bossAI(e,dt){const G=this.G,ts=G.p.dead?[]:[[this.gp,G.p]];if(G.rem.live)ts.push([G.rem.tp,null]);if(!ts.length)ts.push([this.gp,G.p]);let b=ts[0],bd=1e9;for(const t of ts){const d=t[0].distanceTo(e.root.position);if(d<bd){bd=d;b=t}}
-  const hr=e.hull/e.maxHull,ph=hr>.66?1:hr>.33?2:3,sp=e.max*(1+.3*(ph-1))*((e.stag=(e.stag||0)-dt)>0?.25:1),dir=b[0].clone().sub(e.root.position);dir.y=0;dir.normalize();
+  const hr=e.hull/e.maxHull,ph=hr>.66?1:hr>.33?2:3,sp=e.max*(1+.35*(ph-1))*((e.stag=(e.stag||0)-dt)>0?.25:1),dir=b[0].clone().sub(e.root.position);dir.y=0;dir.normalize();
   const tg=Math.atan2(-dir.x,-dir.z),ry=e.root.rotation.y;e.root.rotation.y=ry+Math.atan2(Math.sin(tg-ry),Math.cos(tg-ry))*Math.min(1,3.2*dt);
   e.cd-=dt;e.rc=(e.rc===undefined?3:e.rc)-dt;e.sk=(e.sk===undefined?7:e.sk)-dt;
+  // Jefe de evento: si el jugador se aleja demasiado, lo alcanza con un salto y un pisotón.
+  e.evLeapCd=Math.max(0,(e.evLeapCd||0)-dt);
+  if(e.ev&&bd>26&&e.evLeapCd<=0&&!e.lp&&!e.sp&&!(e.wu>0)){
+   const lw=ph===3?.78:.92,tx=b[0].x,tz=b[0].z;
+   e.lp={fx:e.root.position.x,fz:e.root.position.z,x:tx,z:tz,t:lw,d:lw};
+   e.evLeapCd=6.5;
+   this.hzAdd({x:tx,z:tz,r:10,w:lw,dmg:e.melee*1.25,hex:0xff4422});
+   G.ui.toast('¡CUIDADO! ¡EL JEFE VA A CAER SOBRE TI!',1300);
+   sfx(150,.55,'sawtooth',.11);
+  }
   if(e.lp){e.lp.t-=dt;const u=1-Math.max(0,e.lp.t)/e.lp.d,ep=e.root.position;ep.x=e.lp.fx+(e.lp.x-e.lp.fx)*u;ep.z=e.lp.fz+(e.lp.z-e.lp.fz)*u;ep.y=e.cy+Math.sin(u*Math.PI)*7;e.vel.set(0,0,0);e.parts.al.rotation.x=e.parts.ar.rotation.x=-2.6;
    if(e.lp.t<=0){ep.y=e.cy;G.cam.shake=Math.max(G.cam.shake,.8);G.ps.burst(ep.clone().setY(.5),0xffaa44,30,34,.7,3);e.lp=null;e.cd=Math.max(e.cd,1.2)}return}
   if(e.sp){e.sp.t-=dt;e.sp.c-=dt;e.vel.set(0,0,0);e.root.rotation.y+=dt*2.8;if(e.sp.c<=0){e.sp.c=.1;const a=e.root.rotation.y;for(let k=0;k<2;k++){const aa=a+k*Math.PI,d=V(-Math.sin(aa),0,-Math.cos(aa));G.combat.fire('e',e.root.position.clone().add(V(0,2.6,0)).addScaledVector(d,2),d,70,'red',8)}}
    if(e.sp.t<=0){e.sp=null;e.cd=Math.max(e.cd,1)}return}
-  if(ph>=2&&e.sk<=0&&!(e.wu>0)&&bd>7){e.sk=ph===2?7:5;const sel=ph===3?Math.floor(Math.random()*3):Math.floor(Math.random()*2);
-   if(sel===0){const tx=b[0].x,tz=b[0].z;e.lp={fx:e.root.position.x,fz:e.root.position.z,x:tx,z:tz,t:.95,d:.95};this.hzAdd({x:tx,z:tz,r:9,w:.95,dmg:e.melee*1.1,hex:0xff4422});sfx(180,.5,'sawtooth',.1)}
+  if(e.sk<=0&&!(e.wu>0)&&bd>7){e.sk=[0,8,5.5,3.8][ph];const sel=Math.floor(Math.random()*(ph===1?2:ph===2?3:4));
+   if(sel===0){const lv=b[1]===G.p?this.gv:null,tx=b[0].x+(lv?lv.x*.5:0),tz=b[0].z+(lv?lv.z*.5:0),lw=ph===3?.82:.95;e.lp={fx:e.root.position.x,fz:e.root.position.z,x:tx,z:tz,t:lw,d:lw};this.hzAdd({x:tx,z:tz,r:9,w:lw,dmg:e.melee*1.1,hex:0xff4422});sfx(180,.5,'sawtooth',.1)}
    else if(sel===1){const N=3+ph;for(let i=0;i<N;i++){const c=ts[i%ts.length][0],a=rnd(0,6.28),d=i<2?0:rnd(3,13);this.hzAdd({x:c.x+Math.cos(a)*d,z:c.z+Math.sin(a)*d,r:4,w:1+i*.15,dmg:e.melee*.9,hex:0xff6633,k:'m'})}sfx(200,.5,'sawtooth',.09)}
-   else{e.sp={t:2.4,c:.3};sfx(120,.6,'square',.1)}}
+   else if(sel===2){e.sp={t:2.4,c:.3};sfx(120,.6,'square',.1)}
+    else{if(G.gm.enemies.length<14){const n=3+(ts.length>1?2:0);for(let i=0;i<n;i++){const a=i/n*6.283+rnd(0,1);this.mkAt(this.pick(.5),e.root.position.x+Math.cos(a)*14,e.root.position.z+Math.sin(a)*14)}}G.ps.ring(e.root.position.clone().setY(.3),0xff2244,2,26,.8,1);G.ui.toast('¡El guardián convoca refuerzos!',1800);sfx(140,.6,'sawtooth',.1)}}
   if((e.wu||0)>0){e.wu-=dt;e.vel.set(0,0,0);e.parts.ar.rotation.x=-2.4*(1-Math.max(0,e.wu)/.8);
    if(e.wu<=0){if(bd<12){if(b[1])G.gm.damage(b[1],e.melee);else G.net.send('ev',{t:'hit',d:e.melee});G.cam.shake=Math.max(G.cam.shake,.6)}G.ps.burst(e.root.position.clone().addScaledVector(dir,5).setY(.5),0xffaa44,16,30,.6,3);sfx(80,.4,'sawtooth',.12)}}
   else{if(bd>5.5)e.vel.set(dir.x*sp,0,dir.z*sp);else e.vel.set(0,0,0);
-   if(bd<9&&e.cd<=0){e.wu=.8;e.cd=2.6-.35*ph;sfx(220,.6,'sawtooth',.07)}
+   if(bd<9&&e.cd<=0){e.wu=ph===3?.6:.8;e.cd=2.3-.4*ph;sfx(220,.6,'sawtooth',.07)}
    else if(bd>13&&e.rc<=0){e.rc=3.4-.6*ph;const n=1+ph,o=e.root.position.clone().add(V(0,2.6,0)).addScaledVector(V(-Math.sin(tg),0,-Math.cos(tg)),2),t=b[0].clone().add(V(0,1,0)),rt=V(Math.cos(tg),0,-Math.sin(tg));
     for(let i=0;i<n;i++){const d=t.clone().sub(o).normalize().addScaledVector(rt,(i-(n-1)/2)*.09).normalize();G.combat.fire('e',o,d,75,'red',11)}sfx(260,.3,'square',.06)}}
   e.root.position.addScaledVector(e.vel,dt);e.root.position.y=e.cy;this.bAnim(e,dt,Math.min(1,e.vel.length()/6))}
@@ -1432,7 +1457,7 @@ class CoopSystem{
  groundTick(dt,t){const G=this.G,p=G.p;this.onPad=false;
   PADS.forEach((q,pi)=>{if(Math.hypot(q.x-this.gp.x,q.z-this.gp.z)<6){this.onPad=true;const bn=this.bonus()?2:1;p.laser=Math.min(this.laserCap(),p.laser+7.5*dt*bn);p.boost=Math.min(this.boostCap(),p.boost+21*dt*bn);
    // el escudo de las plataformas tiene reserva limitada y no funciona en combate (antes 30/s ilimitados = inmortal)
-   const u=regenUse('pad'+pi+'_'+this.pi,p,0,5*dt*bn);p.shield+=u.s;regenWarn(G,u)}});
+   const u=regenUse('pad'+pi+'_'+this.pi,p,0,13*dt*bn,{cap:.75,rt:40,lock:3.5});p.shield+=u.s;regenWarn(G,u)}});
   for(const d of[...this.drops]){d.m.position.y=1+Math.sin(t*3+d.id)*.3;d.m.rotation.y+=dt*2;
    if(Math.hypot(d.m.position.x-this.gp.x,d.m.position.z-this.gp.z)<3){p.laser=Math.min(this.laserCap(),p.laser+(this.bonus()?16:8));p.hull=Math.min(p.maxHull,p.hull+4);G.net.send('ev',{t:'pk',id:d.id});this.rmDrop(d.id);sfx(900,.2,'triangle',.06);G.ui.toast('+Energía láser',900)}}}
  update(dt){const G=this.G,gm=G.gm,p=G.p,r=G.rem,t=now();for(const c of[this.pc,this.rc])if(c&&c.visible&&c.userData.anim)c.userData.anim(dt);
@@ -1497,7 +1522,7 @@ class CoopSystem{
    for(const a of m.l){if((a[1]>=3)!==this.ground)continue;seen.add(a[0]);let e=gm.enemies.find(x=>x.id===a[0]);
     if(!e){e=gm.mkEnemy(a[1],a[0]);e.root.position.set(a[2],a[3],a[4]);e.tp=V();e.tq=new THREE.Quaternion();G.rd.scene.add(e.root);gm.enemies.push(e)}
     e.tp.set(a[2],a[3],a[4]);e.tq.set(a[5],a[6],a[7],a[8]);e.hull=a[9];if(a[10]!==undefined)e.shield=a[10];if(a[11]>=0&&(e.fuel===undefined||a[11]<e.fuel))e.fuel=a[11];e.tel=a[12]||0;this.eid=Math.max(this.eid,a[0])}
-   for(const e of[...gm.enemies])if(!seen.has(e.id)){G.ps.death(e.root.position,glowOf(e),!e.ground||e.k===5||!!e.fb,!!e.ground);if(e.k===5||e.fb)this.bossFx(e.root.position.clone());G.rd.scene.remove(e.root);gm.enemies.splice(gm.enemies.indexOf(e),1);if(G.fb)G.fb.kill(e,1)}return true}}
+   for(const e of[...gm.enemies])if(!seen.has(e.id)){if(this.mk&&this.mk.has(e.id)){if(e.ground&&now()-this.mk.get(e.id)<1.5)this.meleeKill();this.mk.delete(e.id)}G.ps.death(e.root.position,glowOf(e),!e.ground||e.k===5||!!e.fb,!!e.ground);if(e.k===5||e.fb)this.bossFx(e.root.position.clone());G.rd.scene.remove(e.root);gm.enemies.splice(gm.enemies.indexOf(e),1);if(G.fb)G.fb.kill(e,1)}return true}}
   return false}
 }
 
@@ -1662,17 +1687,18 @@ class GameManager{
   this.spawn(mode==='pvp'?V(0,0,host?160:-160):mode==='duel'?V(0,0,160):V(0,0,0),mode==='pvp'&&!host);G.rem.live=false;G.rem.root.visible=false;this.next=1.5;this.botT=0;G.coop.end();$('mny').textContent='';if(mode==='duel')this.spawnBot();if(mode==='coop')G.coop.begin(host);
   G.ui.show(true);$('res').textContent='';if(mode!=='solo')G.ui.toast('¡Primero a 5 bajas!',2500)}
  spawn(pos,flip){const G=this.G,p=G.p;p.dead=false;p.hull=p.maxHull;p.shield=p.maxShield;p.vel.set(0,0,0);p.root.position.copy(pos);p.root.quaternion.identity();if(flip)p.root.rotateY(Math.PI);p.root.visible=true;p.inv=2.5;this.dy=null;p.model.rotation.set(0,0,0);p.model.position.set(0,0,0);$('dth').style.opacity=0;$('dtx').style.opacity=0;G.cam.reset(flip?Math.PI:0)}
- spawnWave(){const G=this.G;this.wave++;const n=2+this.wave;
-  for(let i=0;i<n;i++){const gun=this.wave>1&&Math.random()<Math.min(.5,.15*this.wave);
+ spawnWave(){const G=this.G;this.wave++;const n=Math.min(14,3+this.wave),bs=V(rnd(-1,1),rnd(-.5,.5),rnd(-1,1)).normalize();
+  for(let i=0;i<n;i++){const gun=this.wave>1&&Math.random()<Math.min(.65,.2*this.wave);
    const e=makeBody(gun?{hull:90,shield:60,r:4.5,c1:0x1f5c34,c2:0x2c8a4a,glow:0x44ff77,scale:1.4,mass:2}:{hull:40,shield:20,r:2.6,c1:0x8a2020,c2:0x444444,glow:0xff5533,scale:.8});
    Object.assign(e,gun?{bolt:'green',dmg:12,keep:110,th:35,max:60,turn:1.4,rate:.9,pts:250,gun:true}:{bolt:'red',dmg:7,keep:70,th:60,max:95,turn:2.2,rate:.55,pts:100});
-   e.cd=rnd(1.5,3);e.sd=1;e.sdT=rnd(1,3);e.root.position.copy(G.p.root.position).add(V(rnd(-1,1),rnd(-.5,.5),rnd(-1,1)).normalize().multiplyScalar(rnd(300,420)));
+   e.cd=rnd(1.5,3);e.sd=1;e.sdT=rnd(1,3);e.root.position.copy(G.p.root.position).add(bs.clone().multiplyScalar((i%2?-1:1)*rnd(300,420)).add(V(rnd(-70,70),rnd(-35,35),rnd(-70,70))));
    G.rd.scene.add(e.root);this.enemies.push(e)}
   G.ui.toast('OLEADA '+this.wave+' — '+n+' naves hostiles',2500)}
  tgtOf(e){const G=this.G;if(this.mode==='coop'&&G.rem.live&&(G.p.dead||G.rem.root.position.distanceTo(e.root.position)<G.p.root.position.distanceTo(e.root.position)))return G.rem;return G.p}
  hitEnemy(e,d){if(this.mode==='coop'&&!this.auth){this.G.net.send('ev',{t:'eh',i:e.id,d});if(this.G.fb)this.G.fb.hit(e,d,false);e.sh.material.opacity=.7}else this.damage(e,d)}
  mkEnemy(k,id){const T=[{hull:40,shield:20,r:2.6,c1:0x8a2020,c2:0x444444,glow:0xff5533,scale:.8},{hull:90,shield:60,r:4.5,c1:0x1f5c34,c2:0x2c8a4a,glow:0x44ff77,scale:1.4,mass:2},{hull:400,shield:200,r:9,c1:0x4a1a5a,c2:0x882244,glow:0xff44aa,scale:3.2,mass:6},{hull:30,shield:0,r:1.6,c1:0,c2:0,glow:0xffaa33,ty:'x'},{hull:85,shield:20,r:2,c1:0,c2:0,glow:0xff8833,ty:'x'},{hull:1100,shield:250,r:3.8,c1:0,c2:0,glow:0xff2244,ty:'x',mass:8}][k]||EK[k].T;
   const e=makeBody(T);Object.assign(e,[{bolt:'red',dmg:7,keep:70,th:60,max:95,turn:2.2,rate:.55,pts:100},{bolt:'green',dmg:12,keep:110,th:35,max:60,turn:1.4,rate:.9,pts:250,gun:true},{bolt:'green',dmg:10,keep:160,th:25,max:45,turn:1,rate:.4,pts:1000,gun:true,boss:true},{bolt:'red',dmg:8,pts:0,ground:true,max:13},{bolt:'red',dmg:9,pts:300,ground:true,max:17},{bolt:'red',dmg:14,pts:3000,ground:true,boss:true,max:8.5,melee:20,cy:4.6}][k]||EK[k].A,{k,id,cd:rnd(1.5,3),sd:1,sdT:rnd(1,3),dT:0});
+  {const hm=(k===2||k===5)?1.3:(typeof EKB!=='undefined'&&EKB.includes(k))?1.25:1;if(hm>1){e.hull=e.maxHull=Math.round(e.hull*hm);if(e.maxShield){e.shield=e.maxShield=Math.round(e.maxShield*hm)}}}
   if(k>=3){groundModel(e,k);decorEnemy(e)}addBar(e);
   return e}
  spawnBot(){const G=this.G,e=makeBody({hull:100,shield:100,r:3.2,c1:0x8a2020,c2:0x552222,glow:0xff5533});
@@ -1683,6 +1709,13 @@ class GameManager{
   this.tmp.position.copy(ep);this.tmp.lookAt(ep.clone().multiplyScalar(2).sub(aim));e.root.quaternion.rotateTowards(this.tmp.quaternion,e.turn*dt);
   const f=V(0,0,-1).applyQuaternion(e.root.quaternion),r=V(1,0,0).applyQuaternion(e.root.quaternion);
   e.sdT-=dt;if(e.sdT<=0){e.sd=-e.sd;e.sdT=rnd(1.5,3.5)}
+   {const wv=this.mode==='solo'?this.wave:G.coop.wave;
+    if(e.boss&&!e.ground){const hr=e.hull/e.maxHull,esc=n=>{if(this.enemies.length>=9)return;for(let i=0;i<n;i++){const q=this.mkEnemy(i===0?1:0,++G.coop.eid);q.root.position.copy(ep).add(V(rnd(-60,60),rnd(-30,30),rnd(-60,60)));G.rd.scene.add(q.root);this.enemies.push(q)}G.ui.toast('¡El jefe convoca escoltas!',2200);sfx(110,.6,'sawtooth',.1)};
+     if(hr<.66&&!e.p2){e.p2=1;esc(2)}if(hr<.33&&!e.p3){e.p3=1;e.turn*=1.4;e.max*=1.15;esc(3)}}
+    if(!e.bot&&!e.ground&&(wv>=3||e.boss)){e.dg=(e.dg===undefined?rnd(2,4):e.dg)-dt;
+     if(e.dg<=0){const aimed=p===G.p?(G.ctrl.fire&&!p.dead&&ep.clone().sub(G.rd.cam.position).normalize().angleTo(V(0,0,-1).applyQuaternion(G.cam.q))<.15):Math.random()<.4;
+      if(aimed){e.dg=Math.max(2,rnd(3.5,6)-wv*.15)*(e.boss?.6:1);e.vel.addScaledVector(r,e.sd*(e.boss?55:38));e.dr=.5}else e.dg=.35}
+     if(e.dr>0){e.dr-=dt;e.model.rotation.z=-e.sd*(1-e.dr/.5)*Math.PI*2}else if(e.dr!==undefined)e.model.rotation.z=0}}
   if(e.bot){e.dd-=dt;// el rival también hace piruetas esquivando cuando le apuntas y disparas
    if(e.dd<=0){e.dd=rnd(2,4);if(!p.dead&&G.ctrl.fire&&ep.clone().sub(G.rd.cam.position).normalize().angleTo(V(0,0,-1).applyQuaternion(G.cam.q))<.15){e.vel.addScaledVector(r,e.sd*38);e.inv=.45;e.dT=.5}}
    if(e.dT>0){e.dT-=dt;e.model.rotation.z=-e.sd*(1-e.dT/.5)*Math.PI*2}else e.model.rotation.z=0}
@@ -1691,7 +1724,7 @@ class GameManager{
   e.cd-=dt;if(e.cd<=0&&!p.dead&&dist<280&&f.angleTo(aim.clone().sub(ep))<.12){e.cd=e.rate+rnd(0,.4);
    for(const s of e.gun?[-1,1]:[0]){const d=f.clone().add(V(rnd(-.02,.02),rnd(-.02,.02),rnd(-.02,.02))).normalize();G.combat.fire('e',ep.clone().addScaledVector(f,4).addScaledVector(r,s*2),d,150,e.bolt,e.dmg)}sfx(300,.15,'square',.02)}
   G.ps.trail(e,e.glow,1.2)}
- damage(b,d){if(b.inv>0||b.dead)return false;const G=this.G,d0=d;if(b===G.p)d*=1.3;if(b.boss&&Math.random()<.08)b.stag=.3;b.lastHit=now();if(b!==G.p&&b!==G.rem)G.ui.hm=now();if(b.ground){b.hitT=now();if(b!==G.p)G.ps.burst(b.root.position,glowOf(b),4,16,.3,1.3)}
+ damage(b,d){if(b.inv>0||b.dead)return false;const G=this.G,d0=d;if(b===G.p)d*=1.3;if(b.boss&&Math.random()<.03)b.stag=.3;b.lastHit=now();if(b!==G.p&&b!==G.rem)G.ui.hm=now();if(b.ground){b.hitT=now();if(b!==G.p)G.ps.burst(b.root.position,glowOf(b),4,16,.3,1.3)}
   if(b.shield>0){const k=b===G.p&&G.coop.bonus()?.55:1,a=Math.min(b.shield/k,d);b.shield-=a*k;d-=a;b.sh.material.opacity=.8}b.hull-=d;
   if(b===G.p){G.ui.flash();G.cam.shake=Math.min(1,G.cam.shake+.5);sfx(160,.2,'square',.07)}
   if(G.fb&&b!==G.p&&!b.remote)G.fb.hit(b,d0,b.hull<=0);
@@ -1875,8 +1908,8 @@ const ENRM=new THREE.MeshBasicMaterial({color:0xff3322});
 // de REGEN_CAP × casco máximo que se rellena en REGEN_RT s, y no cura durante REGEN_LOCK s tras recibir daño.
 const FBW={slam:1.1,charge:.9,volley:.8,summon:.9,roots:1,spores:.9,meteor:.9,fan:.8,spin:1.1,quake:1.2,breath:1,spikes:.9,blizzard:1,nova:1.3},FBA={charge:.7,spin:2.4,breath:1.6,blizzard:3};
 const REGEN=new Map(),REGEN_CAP=.4,REGEN_RT=240,REGEN_LOCK=6;
-function regenUse(key,p,hr,sr){const t=now();if(t-(p.lastHit||-99)<REGEN_LOCK)return{h:0,s:0,lock:1};let r=REGEN.get(key);if(!r){r={l:REGEN_CAP,t};REGEN.set(key,r)}
- r.l=Math.min(REGEN_CAP,r.l+(t-r.t)*REGEN_CAP/REGEN_RT);r.t=t;let hh=hr>0?Math.min(hr,p.maxHull-p.hull):0,ss=sr>0?Math.min(sr,p.maxShield-p.shield):0;const tot=(hh+ss)/p.maxHull;
+function regenUse(key,p,hr,sr,o){const t=now(),CAP=(o&&o.cap)||REGEN_CAP,RT=(o&&o.rt)||REGEN_RT,LK=o&&o.lock!==undefined?o.lock:REGEN_LOCK;if(t-(p.lastHit||-99)<LK)return{h:0,s:0,lock:1};let r=REGEN.get(key);if(!r){r={l:CAP,t};REGEN.set(key,r)}
+ r.l=Math.min(CAP,r.l+(t-r.t)*CAP/RT);r.t=t;let hh=hr>0?Math.min(hr,p.maxHull-p.hull):0,ss=sr>0?Math.min(sr,p.maxShield-p.shield):0;const tot=(hh+ss)/p.maxHull;
  if(tot>r.l){const k=r.l/tot;hh*=k;ss*=k;r.l=0}else r.l-=tot;return{h:hh,s:ss,dry:r.l<=.002&&tot>0}}
 function regenWarn(G,u){const t=now();if((u.lock||u.dry)&&t-(G.rwT||0)>6){G.rwT=t;G.ui.toast(u.lock?'No puedes recuperarte en pleno combate':'Reserva agotada: este punto necesita tiempo para recargarse',2200)}}
 
